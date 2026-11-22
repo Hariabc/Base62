@@ -5,33 +5,33 @@
 :root {
   --bg-page: #FEF3E2;
   --bg-card: #FFFFFF;
-  --bg-subtle: #F7EAD7;
+  --bg-subtle: #F6E7D3;
   --bg-input: #FFFFFF;
-  --border-subtle: rgba(42, 26, 14, 0.08);
-  --border-hover: rgba(42, 26, 14, 0.18);
+  --border-subtle: rgba(42, 26, 14, 0.12);
+  --border-hover: rgba(42, 26, 14, 0.24);
   --text-main: #2A1A0E;
-  --text-muted: #755E4E;
-  --text-faint: #A69282;
+  --text-muted: #6B5444;
+  --text-faint: #968070;
   --brand-primary: #D4621A;
   --brand-primary-hover: #BF5313;
   --brand-secondary: #F4AE52;
-  --shadow-card: 0 4px 24px -2px rgba(42, 26, 14, 0.06);
+  --shadow-card: 0 4px 20px -2px rgba(42, 26, 14, 0.06);
 }
 
 .dark {
-  --bg-page: #1D120A;
+  --bg-page: #190F07;
   --bg-card: #2A1A0E;
   --bg-subtle: #382415;
-  --bg-input: #23150B;
-  --border-subtle: rgba(254, 243, 226, 0.08);
-  --border-hover: rgba(254, 243, 226, 0.18);
+  --bg-input: #201309;
+  --border-subtle: rgba(244, 174, 82, 0.16);
+  --border-hover: rgba(244, 174, 82, 0.32);
   --text-main: #FEF3E2;
   --text-muted: #D1C0B2;
   --text-faint: #9A8778;
   --brand-primary: #D4621A;
   --brand-primary-hover: #E2722A;
   --brand-secondary: #F4AE52;
-  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 10px 30px -5px rgba(10, 5, 2, 0.6);
 }
 
 @layer base {
@@ -39,7 +39,7 @@
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     background-color: var(--bg-page);
     color: var(--text-main);
-    transition: background-color 0.25s ease, color 0.25s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -60,19 +60,20 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(212, 98, 26, 0.2);
+  background: rgba(212, 98, 26, 0.25);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(212, 98, 26, 0.4);
+  background: rgba(212, 98, 26, 0.45);
 }
 
-/* Subtle aesthetic utility classes */
+/* Aesthetic card class ensuring correct background and text color in all modes */
 .card-aesthetic {
   background-color: var(--bg-card);
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-card);
+  color: var(--text-main);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 

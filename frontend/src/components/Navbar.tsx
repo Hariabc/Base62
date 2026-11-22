@@ -24,24 +24,23 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleTheme,
 }) => {
   return (
-    <header className="border-b border-theme-border bg-theme-page/80 backdrop-blur-md sticky top-0 z-40 transition-colors">
+    <header className="border-b border-theme-border bg-theme-page/85 backdrop-blur-md sticky top-0 z-40 transition-colors">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         
-        {/* Minimalist Logo */}
+        {/* Brand Logo with Image */}
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setActiveTab('links')}
-            className="flex items-center gap-2 group text-left"
+            className="flex items-center gap-2.5 group text-left"
           >
-            <div className="w-8 h-8 rounded-xl bg-palette-terracotta text-palette-cream flex items-center justify-center font-bold text-sm shadow-sm group-hover:scale-105 transition-transform">
-              B
-            </div>
-            <div>
-              <span className="font-extrabold text-lg tracking-tight text-theme-main">
-                Base62
-              </span>
-              <span className="text-palette-terracotta font-black text-sm ml-0.5">•</span>
-            </div>
+            <img
+              src="/logo.png"
+              alt="Base62"
+              className="h-8 w-auto object-contain rounded-lg group-hover:scale-105 transition-transform drop-shadow-sm"
+            />
+            <span className="font-extrabold text-lg tracking-tight text-theme-main">
+              Base62
+            </span>
           </button>
         </div>
 
@@ -92,7 +91,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right Actions */}
         <div className="flex items-center gap-2.5">
-          {/* Theme Switcher: Cream Linen vs Espresso Night */}
+          {/* Theme Switcher */}
           <button
             onClick={onToggleTheme}
             className="p-2 rounded-xl text-theme-muted hover:text-theme-main hover:bg-theme-subtle border border-theme-border transition-colors"
@@ -114,8 +113,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
 
               <div className="flex items-center gap-2 pl-2 border-l border-theme-border">
-                <div className="flex items-center gap-2 px-2 py-1 rounded-xl bg-theme-subtle/80 border border-theme-border">
-                  <div className="w-6 h-6 rounded-lg bg-palette-terracotta/15 text-palette-terracotta flex items-center justify-center font-bold text-xs">
+                <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-theme-subtle border border-theme-border">
+                  <div className="w-6 h-6 rounded-lg bg-palette-terracotta/20 text-palette-terracotta flex items-center justify-center font-bold text-xs">
                     {user.fullName ? user.fullName[0].toUpperCase() : 'U'}
                   </div>
                   <span className="text-xs font-semibold text-theme-main hidden sm:inline">

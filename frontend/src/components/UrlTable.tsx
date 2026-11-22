@@ -36,19 +36,19 @@ export const UrlTable: React.FC<UrlTableProps> = ({
   };
 
   return (
-    <div className="card-aesthetic rounded-2xl overflow-hidden mt-6">
+    <div className="card-aesthetic rounded-2xl overflow-hidden mt-6 shadow-md">
       {/* Header bar */}
-      <div className="p-4 sm:p-5 border-b border-theme-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div className="p-4 sm:p-5 border-b border-theme-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-theme-card">
         <div>
           <h2 className="text-sm font-bold text-theme-main flex items-center gap-2">
             <span>Links</span>
-            <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-theme-subtle text-theme-muted">
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-theme-subtle text-palette-amber font-semibold border border-theme-border">
               {urls.length}
             </span>
           </h2>
         </div>
 
-        {/* Quiet Search */}
+        {/* Search */}
         <div className="relative w-full sm:w-64">
           <Search className="w-3.5 h-3.5 text-theme-faint absolute inset-y-0 left-3 my-auto pointer-events-none" />
           <input
@@ -56,7 +56,7 @@ export const UrlTable: React.FC<UrlTableProps> = ({
             placeholder="Search links..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-theme-subtle/70 border border-theme-border text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
+            className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-theme-input border border-theme-border text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
           />
         </div>
       </div>
@@ -64,7 +64,7 @@ export const UrlTable: React.FC<UrlTableProps> = ({
       {/* Table view */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
-          <thead className="bg-theme-subtle/40 text-theme-muted font-medium text-[11px] border-b border-theme-border">
+          <thead className="bg-theme-subtle/50 text-theme-muted font-bold text-[10px] uppercase tracking-wider border-b border-theme-border">
             <tr>
               <th className="py-2.5 px-4">Destination</th>
               <th className="py-2.5 px-4">Short Link</th>
@@ -88,14 +88,14 @@ export const UrlTable: React.FC<UrlTableProps> = ({
               </tr>
             ) : (
               filteredUrls.map((url) => (
-                <tr key={url.id} className="hover:bg-theme-subtle/30 transition-colors group">
+                <tr key={url.id} className="hover:bg-theme-subtle/40 transition-colors group">
                   {/* Title & Original Link */}
                   <td className="py-3 px-4 max-w-xs">
                     <div className="font-semibold text-theme-main truncate flex items-center gap-1.5">
-                      <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${url.isActive && !url.isExpired ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                      <span className={`w-2 h-2 rounded-full flex-shrink-0 ${url.isActive && !url.isExpired ? 'bg-emerald-500' : 'bg-rose-500'}`} />
                       <span className="truncate">{url.title || 'Untitled Link'}</span>
                     </div>
-                    <div className="text-[11px] text-theme-muted truncate pl-3 mt-0.5">
+                    <div className="text-[11px] text-theme-muted truncate pl-3.5 mt-0.5">
                       {url.originalUrl}
                     </div>
                   </td>
@@ -107,7 +107,7 @@ export const UrlTable: React.FC<UrlTableProps> = ({
                         href={url.shortUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-medium text-palette-terracotta hover:underline"
+                        className="font-bold text-palette-amber hover:underline text-xs"
                       >
                         {url.customAlias ? `/r/${url.customAlias}` : `/r/${url.shortCode}`}
                       </a>
@@ -117,7 +117,7 @@ export const UrlTable: React.FC<UrlTableProps> = ({
                         title="Copy short link"
                       >
                         {copiedId === url.id ? (
-                          <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                          <Check className="w-3 h-3 text-emerald-500" />
                         ) : (
                           <Copy className="w-3 h-3" />
                         )}
@@ -127,7 +127,7 @@ export const UrlTable: React.FC<UrlTableProps> = ({
 
                   {/* Clicks */}
                   <td className="py-3 px-4 text-center">
-                    <span className="font-mono text-xs font-semibold text-theme-main">
+                    <span className="font-mono text-xs font-bold text-theme-main px-2 py-0.5 rounded-md bg-theme-subtle border border-theme-border">
                       {url.clickCount.toLocaleString()}
                     </span>
                   </td>
@@ -139,17 +139,17 @@ export const UrlTable: React.FC<UrlTableProps> = ({
 
                   {/* Actions */}
                   <td className="py-3 px-4 text-right">
-                    <div className="inline-flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                    <div className="inline-flex items-center gap-1">
                       <button
                         onClick={() => onSelectUrl(url)}
-                        className="p-1.5 rounded-lg hover:bg-theme-subtle text-theme-muted hover:text-palette-terracotta transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-theme-subtle text-theme-muted hover:text-palette-terracotta transition-colors border border-transparent hover:border-theme-border"
                         title="View Analytics"
                       >
                         <BarChart3 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => onOpenQr(url)}
-                        className="p-1.5 rounded-lg hover:bg-theme-subtle text-theme-muted hover:text-theme-main transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-theme-subtle text-theme-muted hover:text-theme-main transition-colors border border-transparent hover:border-theme-border"
                         title="QR Code"
                       >
                         <QrCode className="w-3.5 h-3.5" />
@@ -158,14 +158,14 @@ export const UrlTable: React.FC<UrlTableProps> = ({
                         href={url.shortUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="p-1.5 rounded-lg hover:bg-theme-subtle text-theme-muted hover:text-theme-main transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-theme-subtle text-theme-muted hover:text-theme-main transition-colors border border-transparent hover:border-theme-border"
                         title="Open Link"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                       <button
                         onClick={() => onDeleteUrl(url.id)}
-                        className="p-1.5 rounded-lg hover:bg-rose-500/10 text-theme-faint hover:text-rose-500 transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-rose-500/15 text-theme-faint hover:text-rose-500 transition-colors border border-transparent hover:border-rose-500/20"
                         title="Delete"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

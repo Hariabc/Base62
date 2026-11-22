@@ -21,7 +21,8 @@ export const App: React.FC = () => {
   const [selectedUrl, setSelectedUrl] = useState<UrlItem | null>(null);
   const [activeTab, setActiveTab] = useState<'links' | 'analytics' | 'ai' | 'docs'>('links');
   const [isDark, setIsDark] = useState<boolean>(() => {
-    return localStorage.getItem('base62_theme') === 'dark';
+    const saved = localStorage.getItem('base62_theme');
+    return saved !== null ? saved === 'dark' : true;
   });
 
   // Modals
