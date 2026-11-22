@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link2, ArrowRight, Loader2, Check, Copy, QrCode, SlidersHorizontal, Sparkles } from 'lucide-react';
+import { Link2, ArrowRight, Loader2, Check, Copy, QrCode, SlidersHorizontal, Sparkles, Clock } from 'lucide-react';
 import { UrlItem } from '../types';
 import { urlApi } from '../api/client';
 
@@ -12,11 +12,23 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
   const [originalUrl, setOriginalUrl] = useState('');
   const [customAlias, setCustomAlias] = useState('');
   const [title, setTitle] = useState('');
+  const [expiresAt, setExpiresAt] = useState('');
   const [showOptions, setShowOptions] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [recentCreated, setRecentCreated] = useState<UrlItem | null>(null);
   const [copied, setCopied] = useState(false);
+
+  const setPresetHours = (hours: number | null) => {
+    if (hours === null) {
+      setExpiresAt('');
+      return;
+    }
+    const d = new Date(Date.now() + hours * 3600 * 1000);
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const formatted = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    setExpiresAt(formatted);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +46,7 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
         originalUrl: formattedUrl,
         customAlias: customAlias.trim() || undefined,
         title: title.trim() || undefined,
+        expiresAt: expiresAt ? new Date(expiresAt).toISOString() : undefined,
       };
 
       const result = await urlApi.createUrl(payload);
@@ -42,6 +55,7 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
       setOriginalUrl('');
       setCustomAlias('');
       setTitle('');
+      setExpiresAt('');
       setShowOptions(false);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Could not shorten link. Verify format or alias.');
@@ -104,7 +118,7 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
               type="button"
               onClick={() => setShowOptions(!showOptions)}
               className={`absolute right-2 px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1 transition-colors ${
-                showOptions || customAlias || title
+                showOptions || customAlias || title || expiresAt
                   ? 'bg-palette-terracotta/15 text-palette-terracotta border border-palette-terracotta/30'
                   : 'text-theme-muted hover:text-theme-main hover:bg-theme-subtle'
               }`}
@@ -132,7 +146,7 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
 
         {/* Minimal Optional Fields */}
         {showOptions && (
-          <div className="mt-2.5 pt-3 border-t border-theme-border grid grid-cols-1 sm:grid-cols-2 gap-2.5 px-1 animate-in fade-in-50 duration-150">
+          <div className="mt-2.5 pt-3 border-t border-theme-border grid grid-cols-1 sm:grid-cols-3 gap-3 px-1 animate-in fade-in-50 duration-150">
             <div>
               <label className="block text-[11px] font-semibold text-theme-muted mb-1">Custom Alias (Optional)</label>
               <div className="relative flex items-center">
@@ -157,6 +171,50 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
                 className="w-full px-3 py-2 rounded-lg bg-theme-input border border-theme-border text-base sm:text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
               />
             </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-[11px] font-semibold text-theme-muted">Expires At (Optional)</label>
+                {expiresAt && (
+                  <button
+                    type="button"
+                    onClick={() => setPresetHours(null)}
+                    className="text-[10px] text-palette-terracotta hover:underline font-semibold"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              <input
+                type="datetime-local"
+                value={expiresAt}
+                onChange={(e) => setExpiresAt(e.target.value)}
+                className="w-full px-2 py-1.5 rounded-lg bg-theme-input border border-theme-border text-xs text-theme-main focus:outline-none focus:border-palette-terracotta"
+              />
+              <div className="flex items-center gap-1.5 mt-1.5">
+                <button
+                  type="button"
+                  onClick={() => setPresetHours(24)}
+                  className="px-2 py-0.5 rounded text-[10px] font-medium bg-theme-subtle hover:bg-palette-terracotta/20 text-theme-muted hover:text-palette-terracotta border border-theme-border transition-colors"
+                >
+                  24h
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPresetHours(24 * 7)}
+                  className="px-2 py-0.5 rounded text-[10px] font-medium bg-theme-subtle hover:bg-palette-terracotta/20 text-theme-muted hover:text-palette-terracotta border border-theme-border transition-colors"
+                >
+                  7d
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPresetHours(24 * 30)}
+                  className="px-2 py-0.5 rounded text-[10px] font-medium bg-theme-subtle hover:bg-palette-terracotta/20 text-theme-muted hover:text-palette-terracotta border border-theme-border transition-colors"
+                >
+                  30d
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -180,6 +238,12 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
               <span className="text-[11px] text-theme-muted truncate block max-w-xs sm:max-w-md">
                 ↳ {recentCreated.originalUrl}
               </span>
+              {recentCreated.expiresAt && (
+                <span className="text-[10px] text-palette-amber flex items-center gap-1 mt-0.5 font-mono">
+                  <Clock className="w-3 h-3" />
+                  Expires: {new Date(recentCreated.expiresAt).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+                </span>
+              )}
             </div>
           </div>
 

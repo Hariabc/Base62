@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ExternalLink, Copy, Check, QrCode, BarChart3, Trash2, Calendar, Globe } from 'lucide-react';
+import { Search, ExternalLink, Copy, Check, QrCode, BarChart3, Trash2, Calendar, Globe, Clock } from 'lucide-react';
 import { UrlItem } from '../types';
 
 interface UrlTableProps {
@@ -120,9 +120,21 @@ export const UrlTable: React.FC<UrlTableProps> = ({
 
               {/* Bottom Info & Action Buttons */}
               <div className="flex items-center justify-between pt-1">
-                <span className="text-[10px] text-theme-faint font-mono">
-                  {new Date(url.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-theme-faint font-mono">
+                    {new Date(url.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </span>
+                  {url.isExpired ? (
+                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-rose-500/15 text-rose-500 font-semibold border border-rose-500/30">
+                      Expired
+                    </span>
+                  ) : url.expiresAt ? (
+                    <span className="text-[10px] text-palette-amber font-mono flex items-center gap-0.5">
+                      <Clock className="w-2.5 h-2.5" />
+                      Exp: {new Date(url.expiresAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                    </span>
+                  ) : null}
+                </div>
 
                 <div className="flex items-center gap-1">
                   <button
@@ -235,9 +247,19 @@ export const UrlTable: React.FC<UrlTableProps> = ({
                     </span>
                   </td>
 
-                  {/* Created At */}
+                  {/* Created At & Expiration */}
                   <td className="py-3 px-4 text-theme-muted text-[11px] font-mono">
-                    {new Date(url.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                    <div>{new Date(url.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}</div>
+                    {url.isExpired ? (
+                      <span className="inline-block mt-0.5 px-1.5 py-0.2 rounded text-[9px] bg-rose-500/15 text-rose-500 font-semibold border border-rose-500/30">
+                        Expired
+                      </span>
+                    ) : url.expiresAt ? (
+                      <span className="inline-flex items-center gap-0.5 mt-0.5 text-[10px] text-palette-amber">
+                        <Clock className="w-2.5 h-2.5" />
+                        Exp: {new Date(url.expiresAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                      </span>
+                    ) : null}
                   </td>
 
                   {/* Actions */}
