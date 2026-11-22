@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link2, Sparkles, ChevronDown, ChevronUp, Calendar, Tag, ShieldCheck, ArrowRight, Loader2, Check, Copy, QrCode } from 'lucide-react';
+import { Link2, ArrowRight, Loader2, Check, Copy, QrCode, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { UrlItem } from '../types';
 import { urlApi } from '../api/client';
 
@@ -12,8 +12,7 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
   const [originalUrl, setOriginalUrl] = useState('');
   const [customAlias, setCustomAlias] = useState('');
   const [title, setTitle] = useState('');
-  const [expiresAt, setExpiresAt] = useState('');
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [recentCreated, setRecentCreated] = useState<UrlItem | null>(null);
@@ -35,7 +34,6 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
         originalUrl: formattedUrl,
         customAlias: customAlias.trim() || undefined,
         title: title.trim() || undefined,
-        expiresAt: expiresAt ? new Date(expiresAt).toISOString() : undefined,
       };
 
       const result = await urlApi.createUrl(payload);
@@ -44,10 +42,9 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
       setOriginalUrl('');
       setCustomAlias('');
       setTitle('');
-      setExpiresAt('');
-      setShowAdvanced(false);
+      setShowOptions(false);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to shorten URL. Check format or alias uniqueness.');
+      setError(err.response?.data?.message || 'Could not shorten link. Verify format or alias.');
     } finally {
       setLoading(false);
     }
@@ -60,180 +57,140 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-b from-espresso-900/90 to-espresso-950/90 border border-espresso-800 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
-      {/* Background ambient lighting */}
-      <div className="absolute top-0 right-1/4 -mt-16 w-80 h-80 bg-brand-600/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-10 left-10 w-64 h-64 bg-palette-amber/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="max-w-3xl mx-auto pt-4 pb-2">
+      {/* Aesthetic Hero Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-theme-main tracking-tight">
+          Simplify your links.
+        </h1>
+        <p className="text-sm text-theme-muted mt-2 max-w-md mx-auto">
+          Ultra-fast Base62 redirects with quiet, real-time AI telemetry.
+        </p>
+      </div>
 
-      <div className="relative max-w-3xl mx-auto">
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/15 border border-brand-500/30 text-palette-amber text-xs font-semibold mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-palette-amber" />
-            <span>High-Throughput Base62 Encoding & AI Analytics</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-palette-cream tracking-tight">
-            Shorten, Brand & Track Any URL
-          </h2>
-          <p className="text-sm text-amber-100/70 mt-1 max-w-xl mx-auto">
-            Sub-millisecond Redis redirection, distributed rate-limiting, and deep AI click diagnostics.
-          </p>
+      {error && (
+        <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-300 text-xs text-center flex items-center justify-between">
+          <span className="flex-1">{error}</span>
+          <button onClick={() => setError(null)} className="font-bold text-rose-500 ml-2">×</button>
         </div>
+      )}
 
-        {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center justify-between">
-            <span>{error}</span>
-            <button onClick={() => setError(null)} className="text-rose-400 hover:text-white font-bold ml-2">×</button>
-          </div>
-        )}
-
-        {/* Shortener Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-2.5">
-            <div className="relative flex-1">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-200/50">
-                <Link2 className="w-5 h-5 text-palette-amber" />
-              </div>
-              <input
-                type="text"
-                placeholder="Paste your long destination URL (e.g. https://example.com/products/software/course?id=123)"
-                value={originalUrl}
-                onChange={(e) => setOriginalUrl(e.target.value)}
-                required
-                className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-espresso-950/90 border border-espresso-750 text-palette-cream placeholder-amber-200/40 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-inner font-mono text-xs sm:text-sm"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading || !originalUrl.trim()}
-              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 via-brand-500 to-palette-amber hover:from-brand-500 hover:to-amber-400 text-espresso-950 font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-brand-600/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] border border-brand-400/30"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin text-espresso-950" />
-                  <span>Encoding...</span>
-                </>
-              ) : (
-                <>
-                  <span>Shorten URL</span>
-                  <ArrowRight className="w-4 h-4 text-espresso-950" />
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* Advanced Options Toggle */}
-          <div className="flex items-center justify-between pt-1">
+      {/* Main Clean Shortener Input Box */}
+      <div className="card-aesthetic rounded-2xl p-2 sm:p-2.5">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch gap-2">
+          <div className="relative flex-1 flex items-center">
+            <Link2 className="w-4 h-4 text-theme-faint absolute left-3.5 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Paste long link (e.g. https://example.com/project)..."
+              value={originalUrl}
+              onChange={(e) => setOriginalUrl(e.target.value)}
+              required
+              className="w-full pl-10 pr-24 py-3 bg-transparent text-theme-main placeholder-theme-faint text-sm focus:outline-none"
+            />
+            
+            {/* Custom Options Pill Toggle */}
             <button
               type="button"
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              className="text-xs text-amber-200/70 hover:text-palette-amber flex items-center gap-1.5 font-medium transition-colors"
+              onClick={() => setShowOptions(!showOptions)}
+              className={`absolute right-2 px-2.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1 transition-colors ${
+                showOptions || customAlias || title
+                  ? 'bg-palette-terracotta/10 text-palette-terracotta'
+                  : 'text-theme-muted hover:text-theme-main hover:bg-theme-subtle'
+              }`}
             >
-              <span>Custom Alias, Expiration & Metadata</span>
-              {showAdvanced ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              <SlidersHorizontal className="w-3 h-3" />
+              <span className="hidden sm:inline">Options</span>
             </button>
-            <div className="flex items-center gap-2 text-[11px] text-palette-amber font-medium">
-              <ShieldCheck className="w-3.5 h-3.5 text-palette-amber" />
-              <span>Collision-resistant Base62 Bijection</span>
-            </div>
           </div>
 
-          {/* Advanced Options Fields */}
-          {showAdvanced && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-espresso-950/70 border border-espresso-800 animate-in fade-in-50 duration-200">
-              <div>
-                <label className="block text-[11px] font-medium text-amber-200/70 mb-1">Custom Alias (Optional)</label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-[11px] text-amber-200/50 font-mono">/r/</span>
-                  <input
-                    type="text"
-                    placeholder="my-campaign"
-                    value={customAlias}
-                    onChange={(e) => setCustomAlias(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 rounded-lg bg-espresso-900 border border-espresso-750 text-xs text-palette-cream placeholder-amber-200/30 focus:outline-none focus:ring-1 focus:ring-brand-500 font-mono"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-medium text-amber-200/70 mb-1">Title / Tag (Optional)</label>
-                <div className="relative">
-                  <Tag className="w-3.5 h-3.5 absolute inset-y-0 left-2.5 my-auto text-amber-200/50" />
-                  <input
-                    type="text"
-                    placeholder="Summer Course Launch"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="w-full pl-8 pr-3 py-2 rounded-lg bg-espresso-900 border border-espresso-750 text-xs text-palette-cream placeholder-amber-200/30 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-medium text-amber-200/70 mb-1">Expiration Date (Optional)</label>
-                <div className="relative">
-                  <Calendar className="w-3.5 h-3.5 absolute inset-y-0 left-2.5 my-auto text-amber-200/50" />
-                  <input
-                    type="datetime-local"
-                    value={expiresAt}
-                    onChange={(e) => setExpiresAt(e.target.value)}
-                    className="w-full pl-8 pr-3 py-2 rounded-lg bg-espresso-900 border border-espresso-750 text-xs text-palette-cream placeholder-amber-200/30 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
+          <button
+            type="submit"
+            disabled={loading || !originalUrl.trim()}
+            className="px-5 py-3 rounded-xl bg-palette-terracotta hover:bg-brand-700 active:scale-[0.98] text-palette-cream font-semibold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <>
+                <span>Shorten</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </>
+            )}
+          </button>
         </form>
 
-        {/* Recently Shortened Result Card */}
-        {recentCreated && (
-          <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-espresso-850 to-espresso-900 border border-brand-500/40 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in-50 duration-300">
-            <div className="flex items-center gap-3.5 w-full sm:w-auto">
-              <div className="w-12 h-12 rounded-lg bg-white p-1 flex-shrink-0 flex items-center justify-center shadow-md">
-                {recentCreated.qrCodeDataUri ? (
-                  <img src={recentCreated.qrCodeDataUri} alt="QR Code" className="w-full h-full object-contain" />
-                ) : (
-                  <QrCode className="w-6 h-6 text-brand-600" />
-                )}
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <a
-                    href={recentCreated.shortUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-mono text-sm sm:text-base font-bold text-palette-amber hover:text-amber-300 hover:underline truncate"
-                  >
-                    {recentCreated.shortUrl}
-                  </a>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                    Live
-                  </span>
-                </div>
-                <p className="text-xs text-amber-100/60 truncate max-w-sm sm:max-w-md">
-                  ↳ {recentCreated.originalUrl}
-                </p>
+        {/* Minimal Optional Fields */}
+        {showOptions && (
+          <div className="mt-2 pt-2.5 border-t border-theme-border grid grid-cols-1 sm:grid-cols-2 gap-2 px-1 animate-in fade-in-50 duration-150">
+            <div>
+              <label className="block text-[11px] font-medium text-theme-muted mb-1">Custom Alias</label>
+              <div className="relative flex items-center">
+                <span className="absolute left-2.5 text-xs text-theme-faint font-mono">/r/</span>
+                <input
+                  type="text"
+                  placeholder="launch"
+                  value={customAlias}
+                  onChange={(e) => setCustomAlias(e.target.value)}
+                  className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-theme-subtle/60 border border-theme-border text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta font-mono"
+                />
               </div>
             </div>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-              <button
-                onClick={() => copyToClipboard(recentCreated.shortUrl)}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-espresso-800 hover:bg-espresso-750 text-palette-cream text-xs font-semibold border border-espresso-700 transition-colors"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copied ? 'Copied!' : 'Copy'}</span>
-              </button>
-              <button
-                onClick={() => onOpenQr(recentCreated)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-brand-600/30 hover:bg-brand-600/50 text-palette-amber text-xs font-semibold border border-brand-500/40 transition-colors"
-              >
-                <QrCode className="w-3.5 h-3.5" />
-                <span>QR Code</span>
-              </button>
+            <div>
+              <label className="block text-[11px] font-medium text-theme-muted mb-1">Title / Label</label>
+              <input
+                type="text"
+                placeholder="Marketing Launch"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full px-3 py-1.5 rounded-lg bg-theme-subtle/60 border border-theme-border text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
+              />
             </div>
           </div>
         )}
       </div>
+
+      {/* Clean Success Feedback Pill */}
+      {recentCreated && (
+        <div className="mt-4 p-3.5 rounded-2xl bg-palette-cream dark:bg-espresso-900 border border-palette-terracotta/25 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm animate-in fade-in-50 duration-200">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="w-7 h-7 rounded-lg bg-palette-terracotta/10 text-palette-terracotta flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <a
+                href={recentCreated.shortUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="font-mono text-sm font-bold text-palette-terracotta hover:underline truncate block"
+              >
+                {recentCreated.shortUrl}
+              </a>
+              <span className="text-[11px] text-theme-muted truncate block max-w-sm">
+                ↳ {recentCreated.originalUrl}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 w-full sm:w-auto justify-end">
+            <button
+              onClick={() => copyToClipboard(recentCreated.shortUrl)}
+              className="px-3 py-1.5 rounded-lg bg-theme-card hover:bg-theme-subtle text-theme-main text-xs font-medium border border-theme-border flex items-center gap-1.5 transition-colors"
+            >
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{copied ? 'Copied' : 'Copy'}</span>
+            </button>
+            <button
+              onClick={() => onOpenQr(recentCreated)}
+              className="px-3 py-1.5 rounded-lg bg-theme-card hover:bg-theme-subtle text-theme-main text-xs font-medium border border-theme-border flex items-center gap-1.5 transition-colors"
+            >
+              <QrCode className="w-3.5 h-3.5" />
+              <span>QR</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

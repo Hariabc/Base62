@@ -8,6 +8,20 @@ export default {
   theme: {
     extend: {
       colors: {
+        theme: {
+          page: 'var(--bg-page)',
+          card: 'var(--bg-card)',
+          subtle: 'var(--bg-subtle)',
+          input: 'var(--bg-input)',
+          border: 'var(--border-subtle)',
+          'border-hover': 'var(--border-hover)',
+          main: 'var(--text-main)',
+          muted: 'var(--text-muted)',
+          faint: 'var(--text-faint)',
+          primary: 'var(--brand-primary)',
+          'primary-hover': 'var(--brand-primary-hover)',
+          secondary: 'var(--brand-secondary)',
+        },
         palette: {
           cream: '#FEF3E2',
           amber: '#F4AE52',
@@ -41,6 +55,10 @@ export default {
           900: '#2A1A0E',
           950: '#1D120A',
         },
+      },
+      boxShadow: {
+        'aesthetic': 'var(--shadow-card)',
+        'aesthetic-hover': '0 8px 30px -4px rgba(42, 26, 14, 0.1)',
       },
     },
   },

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ExternalLink, Copy, Check, QrCode, BarChart3, Trash2, Globe, Clock, ShieldAlert } from 'lucide-react';
+import { Search, ExternalLink, Copy, Check, QrCode, BarChart3, Trash2 } from 'lucide-react';
 import { UrlItem } from '../types';
 
 interface UrlTableProps {
@@ -17,7 +17,6 @@ export const UrlTable: React.FC<UrlTableProps> = ({
   onSelectUrl,
   onOpenQr,
   onDeleteUrl,
-  onRefresh,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedId, setCopiedId] = useState<number | null>(null);
@@ -37,30 +36,27 @@ export const UrlTable: React.FC<UrlTableProps> = ({
   };
 
   return (
-    <div className="rounded-2xl bg-espresso-900/80 border border-espresso-800 shadow-xl overflow-hidden backdrop-blur-xl">
+    <div className="card-aesthetic rounded-2xl overflow-hidden mt-6">
       {/* Header bar */}
-      <div className="p-4 sm:p-6 border-b border-espresso-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 border-b border-theme-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
-          <h3 className="text-lg font-bold text-palette-cream flex items-center gap-2">
-            <span>Link Management</span>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-espresso-950 text-palette-amber font-mono border border-espresso-800">
-              {urls.length} URLs
+          <h2 className="text-sm font-bold text-theme-main flex items-center gap-2">
+            <span>Links</span>
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-theme-subtle text-theme-muted">
+              {urls.length}
             </span>
-          </h3>
-          <p className="text-xs text-amber-100/60 mt-0.5">
-            Distributed URLs with sub-millisecond Redis redirection and click tracking.
-          </p>
+          </h2>
         </div>
 
-        {/* Search bar */}
-        <div className="relative w-full sm:w-72">
-          <Search className="w-4 h-4 text-amber-200/50 absolute inset-y-0 left-3 my-auto pointer-events-none" />
+        {/* Quiet Search */}
+        <div className="relative w-full sm:w-64">
+          <Search className="w-3.5 h-3.5 text-theme-faint absolute inset-y-0 left-3 my-auto pointer-events-none" />
           <input
             type="text"
-            placeholder="Search by title, alias, or URL..."
+            placeholder="Search links..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-espresso-950/90 border border-espresso-750 text-xs text-palette-cream placeholder-amber-200/40 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-theme-subtle/70 border border-theme-border text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
           />
         </div>
       </div>
@@ -68,135 +64,111 @@ export const UrlTable: React.FC<UrlTableProps> = ({
       {/* Table view */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
-          <thead className="bg-espresso-950/70 text-amber-200/60 font-semibold uppercase tracking-wider text-[10px] border-b border-espresso-800">
+          <thead className="bg-theme-subtle/40 text-theme-muted font-medium text-[11px] border-b border-theme-border">
             <tr>
-              <th className="py-3 px-4">Title & Original Link</th>
-              <th className="py-3 px-4">Short Code & Alias</th>
-              <th className="py-3 px-4">Status</th>
-              <th className="py-3 px-4">Clicks</th>
-              <th className="py-3 px-4">Created</th>
-              <th className="py-3 px-4 text-right">Actions</th>
+              <th className="py-2.5 px-4">Destination</th>
+              <th className="py-2.5 px-4">Short Link</th>
+              <th className="py-2.5 px-4 text-center">Clicks</th>
+              <th className="py-2.5 px-4">Date</th>
+              <th className="py-2.5 px-4 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-espresso-800/60 text-amber-100/90">
+          <tbody className="divide-y divide-theme-border text-theme-main">
             {loading ? (
               <tr>
-                <td colSpan={6} className="py-8 text-center text-amber-200/50">
-                  Loading URLs...
+                <td colSpan={5} className="py-8 text-center text-theme-faint text-xs">
+                  Loading links...
                 </td>
               </tr>
             ) : filteredUrls.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-12 text-center text-amber-200/50">
-                  {searchTerm ? 'No links matching search criteria.' : 'No shortened links yet. Create one above!'}
+                <td colSpan={5} className="py-10 text-center text-theme-faint text-xs">
+                  {searchTerm ? 'No links found matching your search.' : 'No links yet. Shorten your first link above!'}
                 </td>
               </tr>
             ) : (
               filteredUrls.map((url) => (
-                <tr key={url.id} className="hover:bg-espresso-850/50 transition-colors group">
+                <tr key={url.id} className="hover:bg-theme-subtle/30 transition-colors group">
                   {/* Title & Original Link */}
-                  <td className="py-3.5 px-4 max-w-xs">
-                    <div className="font-semibold text-palette-cream truncate text-sm">
-                      {url.title || 'Untitled Link'}
+                  <td className="py-3 px-4 max-w-xs">
+                    <div className="font-semibold text-theme-main truncate flex items-center gap-1.5">
+                      <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${url.isActive && !url.isExpired ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                      <span className="truncate">{url.title || 'Untitled Link'}</span>
                     </div>
-                    <div className="text-[11px] text-amber-200/60 truncate flex items-center gap-1.5 mt-0.5">
-                      <Globe className="w-3 h-3 text-amber-200/40 flex-shrink-0" />
-                      <span className="truncate">{url.originalUrl}</span>
+                    <div className="text-[11px] text-theme-muted truncate pl-3 mt-0.5">
+                      {url.originalUrl}
                     </div>
                   </td>
 
-                  {/* Short Code & Alias */}
-                  <td className="py-3.5 px-4 font-mono">
+                  {/* Short Code & Copy */}
+                  <td className="py-3 px-4 font-mono">
                     <div className="flex items-center gap-2">
                       <a
                         href={url.shortUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-bold text-palette-amber hover:text-amber-300 hover:underline"
+                        className="font-medium text-palette-terracotta hover:underline"
                       >
                         {url.customAlias ? `/r/${url.customAlias}` : `/r/${url.shortCode}`}
                       </a>
                       <button
                         onClick={() => copyShortUrl(url.id, url.shortUrl)}
-                        className="text-amber-200/40 hover:text-palette-cream transition-colors"
+                        className="text-theme-faint hover:text-theme-main transition-colors"
                         title="Copy short link"
                       >
                         {copiedId === url.id ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                         ) : (
-                          <Copy className="w-3.5 h-3.5" />
+                          <Copy className="w-3 h-3" />
                         )}
                       </button>
                     </div>
-                    {url.customAlias && (
-                      <span className="text-[10px] text-amber-200/40 font-sans">
-                        code: {url.shortCode}
-                      </span>
-                    )}
-                  </td>
-
-                  {/* Status */}
-                  <td className="py-3.5 px-4">
-                    {url.isExpired ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/20">
-                        <Clock className="w-2.5 h-2.5" /> Expired
-                      </span>
-                    ) : url.isActive ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                        Active
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-palette-amber/15 text-palette-amber border border-palette-amber/30">
-                        Paused
-                      </span>
-                    )}
                   </td>
 
                   {/* Clicks */}
-                  <td className="py-3.5 px-4">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-espresso-950 font-mono font-bold text-palette-cream text-xs border border-espresso-800">
-                      <span className="text-palette-amber">⚡</span>
-                      <span>{url.clickCount.toLocaleString()}</span>
-                    </div>
+                  <td className="py-3 px-4 text-center">
+                    <span className="font-mono text-xs font-semibold text-theme-main">
+                      {url.clickCount.toLocaleString()}
+                    </span>
                   </td>
 
                   {/* Created At */}
-                  <td className="py-3.5 px-4 text-amber-200/60 font-mono text-[11px]">
-                    {new Date(url.createdAt).toLocaleDateString()}
+                  <td className="py-3 px-4 text-theme-muted text-[11px] font-mono">
+                    {new Date(url.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                   </td>
 
                   {/* Actions */}
-                  <td className="py-3.5 px-4 text-right">
-                    <div className="inline-flex items-center gap-1">
+                  <td className="py-3 px-4 text-right">
+                    <div className="inline-flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
                       <button
                         onClick={() => onSelectUrl(url)}
-                        className="p-1.5 rounded-lg bg-espresso-850 hover:bg-brand-600/30 text-amber-200/60 hover:text-palette-amber transition-colors border border-espresso-800"
-                        title="View Detailed Analytics"
+                        className="p-1.5 rounded-lg hover:bg-theme-subtle text-theme-muted hover:text-palette-terracotta transition-colors"
+                        title="View Analytics"
                       >
-                        <BarChart3 className="w-4 h-4" />
+                        <BarChart3 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => onOpenQr(url)}
-                        className="p-1.5 rounded-lg bg-espresso-850 hover:bg-espresso-800 text-amber-200/60 hover:text-palette-cream transition-colors border border-espresso-800"
-                        title="View QR Code"
+                        className="p-1.5 rounded-lg hover:bg-theme-subtle text-theme-muted hover:text-theme-main transition-colors"
+                        title="QR Code"
                       >
-                        <QrCode className="w-4 h-4" />
+                        <QrCode className="w-3.5 h-3.5" />
                       </button>
                       <a
                         href={url.shortUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="p-1.5 rounded-lg bg-espresso-850 hover:bg-espresso-800 text-amber-200/60 hover:text-palette-cream transition-colors border border-espresso-800"
-                        title="Open destination in new tab"
+                        className="p-1.5 rounded-lg hover:bg-theme-subtle text-theme-muted hover:text-theme-main transition-colors"
+                        title="Open Link"
                       >
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                       <button
                         onClick={() => onDeleteUrl(url.id)}
-                        className="p-1.5 rounded-lg bg-espresso-850 hover:bg-rose-500/20 text-amber-200/60 hover:text-rose-400 transition-colors border border-espresso-800"
-                        title="Delete URL"
+                        className="p-1.5 rounded-lg hover:bg-rose-500/10 text-theme-faint hover:text-rose-500 transition-colors"
+                        title="Delete"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </td>

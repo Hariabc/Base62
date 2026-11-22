@@ -28,7 +28,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
   };
 
   const handleRegenerate = async () => {
-    if (!window.confirm('Are you sure you want to rotate your API key? Previous integrations using this key will immediately stop working.')) {
+    if (!window.confirm('Rotate your API key? Integrations using this key will immediately expire.')) {
       return;
     }
     try {
@@ -36,7 +36,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
       const updated = await authApi.regenerateApiKey();
       onUserUpdated(updated);
     } catch (e) {
-      alert('Failed to regenerate API key');
+      alert('Failed to regenerate key');
     } finally {
       setLoading(false);
     }
@@ -55,69 +55,66 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-espresso-950/80 backdrop-blur-sm animate-in fade-in-50 duration-200">
-      <div className="w-full max-w-lg rounded-2xl bg-espresso-900 border border-espresso-800 p-6 sm:p-7 shadow-2xl relative text-palette-cream">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in-50 duration-150">
+      <div className="w-full max-w-md rounded-2xl bg-theme-card border border-theme-border p-6 shadow-xl relative text-theme-main">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-amber-200/60 hover:text-palette-cream transition-colors"
+          className="absolute top-4 right-4 text-theme-faint hover:text-theme-main transition-colors"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
-        <div className="flex items-center gap-3 mb-5">
-          <div className="w-10 h-10 rounded-xl bg-brand-500/15 text-palette-amber flex items-center justify-center border border-brand-500/30 shadow-md">
-            <Key className="w-5 h-5" />
+        <div className="flex items-center gap-2.5 mb-4">
+          <div className="w-8 h-8 rounded-xl bg-palette-terracotta/10 text-palette-terracotta flex items-center justify-center">
+            <Key className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-palette-cream">Developer API Access</h3>
-            <p className="text-xs text-amber-100/60">Authenticate backend microservices via X-API-KEY header.</p>
+            <h3 className="text-sm font-bold text-theme-main">Developer API Access</h3>
+            <p className="text-[11px] text-theme-muted">Header: X-API-KEY</p>
           </div>
         </div>
 
         {/* API Key Box */}
-        <div className="p-3.5 rounded-xl bg-espresso-950 border border-espresso-800 mb-4">
-          <label className="block text-[11px] font-semibold text-amber-200/60 uppercase tracking-wider mb-1.5">
-            Your Secret API Key
-          </label>
+        <div className="p-3 rounded-xl bg-theme-page border border-theme-border mb-3.5">
           <div className="flex items-center justify-between gap-2">
-            <code className="text-xs text-palette-amber font-mono truncate select-all">
+            <code className="text-xs text-palette-terracotta font-mono truncate select-all">
               {user.apiKey}
             </code>
-            <div className="flex items-center gap-1.5 flex-shrink-0">
+            <div className="flex items-center gap-1">
               <button
                 onClick={handleCopy}
-                className="p-1.5 rounded-lg bg-espresso-850 hover:bg-espresso-800 text-palette-cream text-xs flex items-center gap-1 transition-colors border border-espresso-750"
+                className="p-1.5 rounded-lg hover:bg-theme-subtle text-theme-muted hover:text-theme-main text-xs flex items-center gap-1 transition-colors"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy'}</span>
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copied ? 'Copied' : 'Copy'}</span>
               </button>
               <button
                 onClick={handleRegenerate}
                 disabled={loading}
-                className="p-1.5 rounded-lg bg-espresso-850 hover:bg-espresso-800 text-palette-cream text-xs flex items-center gap-1 transition-colors disabled:opacity-50 border border-espresso-750"
+                className="p-1.5 rounded-lg hover:bg-theme-subtle text-theme-muted hover:text-theme-main text-xs transition-colors disabled:opacity-50"
                 title="Rotate Key"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-palette-amber' : ''}`} />
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Tier Upgrade Selector */}
-        <div className="mb-5 p-3.5 rounded-xl bg-espresso-950/80 border border-espresso-800">
+        {/* Tier Selector */}
+        <div className="mb-4 p-3 rounded-xl bg-theme-subtle/50 border border-theme-border">
           <div className="flex items-center justify-between text-xs mb-2">
-            <span className="font-semibold text-amber-100/90">Rate Limit Tier</span>
-            <span className="font-mono text-palette-amber font-bold">{user.rateLimitPerMinute} req/min</span>
+            <span className="font-semibold text-theme-main">Tier</span>
+            <span className="font-mono text-palette-terracotta font-bold">{user.rateLimitPerMinute} req/min</span>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-1.5">
             {(['FREE', 'PRO', 'ENTERPRISE'] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => handleTierChange(t)}
-                className={`py-1.5 px-2 rounded-lg text-xs font-semibold font-mono border transition-all ${
+                className={`py-1 px-2 rounded-lg text-xs font-semibold font-mono border transition-all ${
                   user.tier === t
-                    ? 'bg-brand-600 text-palette-cream border-brand-500 shadow-md shadow-brand-600/30'
-                    : 'bg-espresso-900 text-amber-200/60 border-espresso-800 hover:border-espresso-700'
+                    ? 'bg-palette-terracotta text-palette-cream border-palette-terracotta shadow-xs'
+                    : 'bg-theme-card text-theme-muted border-theme-border hover:border-theme-border-hover'
                 }`}
               >
                 {t}
@@ -126,18 +123,11 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({
           </div>
         </div>
 
-        {/* Integration Code Sample */}
-        <div>
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-200/70 mb-1.5">
-            <Terminal className="w-3.5 h-3.5 text-palette-amber" />
-            <span>Example cURL Request</span>
-          </div>
-          <pre className="p-3 rounded-xl bg-espresso-950 border border-espresso-800 text-[11px] text-amber-100/90 font-mono overflow-x-auto leading-relaxed">
+        {/* Minimal cURL snippet */}
+        <div className="p-2.5 rounded-xl bg-theme-page border border-theme-border text-[11px] font-mono text-theme-muted overflow-x-auto leading-relaxed">
 {`curl -X POST http://localhost:8080/api/v1/urls \\
-  -H "Content-Type: application/json" \\
   -H "X-API-KEY: ${user.apiKey}" \\
-  -d '{"originalUrl": "https://base62.ai/docs"}'`}
-          </pre>
+  -d '{"originalUrl": "https://base62.ai"}'`}
         </div>
       </div>
     </div>

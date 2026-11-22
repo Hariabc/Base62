@@ -1,144 +1,130 @@
 import React from 'react';
-import { Sparkles, Activity, Key, LogOut, User as UserIcon, Zap } from 'lucide-react';
+import { Sparkles, Key, LogOut, User as UserIcon, Sun, Moon } from 'lucide-react';
 import { User } from '../types';
-import { RateLimitInfo } from '../api/client';
 
 interface NavbarProps {
   user: User | null;
-  rateLimit: RateLimitInfo;
   activeTab: 'links' | 'analytics' | 'ai' | 'docs';
   setActiveTab: (tab: 'links' | 'analytics' | 'ai' | 'docs') => void;
   onOpenAuth: () => void;
   onOpenApiKey: () => void;
   onLogout: () => void;
+  isDark: boolean;
+  onToggleTheme: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   user,
-  rateLimit,
   activeTab,
   setActiveTab,
   onOpenAuth,
   onOpenApiKey,
   onLogout,
+  isDark,
+  onToggleTheme,
 }) => {
-  const usagePercentage = Math.round(((rateLimit.limit - rateLimit.remaining) / rateLimit.limit) * 100) || 5;
-
   return (
-    <header className="border-b border-espresso-800/80 bg-espresso-900/80 backdrop-blur-xl sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <header className="border-b border-theme-border bg-theme-page/80 backdrop-blur-md sticky top-0 z-40 transition-colors">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         
-        {/* Brand Logo */}
+        {/* Minimalist Logo */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 via-brand-600 to-palette-amber flex items-center justify-center shadow-lg shadow-brand-600/25 ring-1 ring-brand-400/30">
-            <Sparkles className="w-5 h-5 text-palette-cream animate-pulse" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-palette-cream via-amber-100 to-palette-amber bg-clip-text text-transparent">
+          <button 
+            onClick={() => setActiveTab('links')}
+            className="flex items-center gap-2 group text-left"
+          >
+            <div className="w-8 h-8 rounded-xl bg-palette-terracotta text-palette-cream flex items-center justify-center font-bold text-sm shadow-sm group-hover:scale-105 transition-transform">
+              B
+            </div>
+            <div>
+              <span className="font-extrabold text-lg tracking-tight text-theme-main">
                 Base62
               </span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-500/15 text-palette-amber border border-brand-500/30">
-                AI Platform
-              </span>
+              <span className="text-palette-terracotta font-black text-sm ml-0.5">•</span>
             </div>
-            <p className="text-[10px] text-amber-200/60 font-mono hidden sm:block">Base62 · Redis Cache · Event Driven</p>
-          </div>
+          </button>
         </div>
 
-        {/* Navigation Tabs */}
-        <nav className="hidden md:flex items-center gap-1 bg-espresso-950/70 p-1 rounded-xl border border-espresso-800">
+        {/* Quiet Minimalist Navigation */}
+        <nav className="flex items-center gap-1 bg-theme-subtle/60 p-1 rounded-xl border border-theme-border">
           <button
             onClick={() => setActiveTab('links')}
-            className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'links'
-                ? 'bg-brand-600 text-palette-cream shadow-md shadow-brand-600/30'
-                : 'text-amber-100/70 hover:text-palette-cream hover:bg-espresso-850'
+                ? 'bg-palette-terracotta text-palette-cream shadow-sm'
+                : 'text-theme-muted hover:text-theme-main'
             }`}
           >
             Links
           </button>
           <button
             onClick={() => setActiveTab('analytics')}
-            className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'analytics'
-                ? 'bg-brand-600 text-palette-cream shadow-md shadow-brand-600/30'
-                : 'text-amber-100/70 hover:text-palette-cream hover:bg-espresso-850'
+                ? 'bg-palette-terracotta text-palette-cream shadow-sm'
+                : 'text-theme-muted hover:text-theme-main'
             }`}
           >
             Analytics
           </button>
           <button
             onClick={() => setActiveTab('ai')}
-            className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
               activeTab === 'ai'
-                ? 'bg-gradient-to-r from-brand-600 to-palette-amber text-espresso-950 font-bold shadow-md shadow-brand-600/30'
-                : 'text-palette-amber hover:text-palette-cream hover:bg-espresso-850'
+                ? 'bg-palette-terracotta text-palette-cream shadow-sm'
+                : 'text-theme-muted hover:text-palette-terracotta'
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            AI Insights
+            <span>AI</span>
           </button>
           <button
             onClick={() => setActiveTab('docs')}
-            className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'docs'
-                ? 'bg-brand-600 text-palette-cream shadow-md shadow-brand-600/30'
-                : 'text-amber-100/70 hover:text-palette-cream hover:bg-espresso-850'
+                ? 'bg-palette-terracotta text-palette-cream shadow-sm'
+                : 'text-theme-muted hover:text-theme-main'
             }`}
           >
-            Swagger / API
+            API
           </button>
         </nav>
 
-        {/* Right actions */}
-        <div className="flex items-center gap-3">
-          
-          {/* Rate Limit Meter */}
-          <div className="hidden lg:flex items-center gap-2.5 bg-espresso-950/80 px-3 py-1.5 rounded-xl border border-espresso-800">
-            <Activity className="w-4 h-4 text-palette-amber animate-pulse" />
-            <div className="text-left">
-              <div className="flex items-center justify-between gap-3 text-[11px] font-mono">
-                <span className="text-amber-200/60 font-medium">Rate Limit</span>
-                <span className="text-palette-amber font-semibold">{rateLimit.remaining}/{rateLimit.limit} req/m</span>
-              </div>
-              <div className="w-28 h-1 bg-espresso-800 rounded-full overflow-hidden mt-1">
-                <div
-                  className={`h-full rounded-full transition-all duration-300 ${
-                    usagePercentage > 80 ? 'bg-rose-500' : usagePercentage > 50 ? 'bg-brand-500' : 'bg-palette-amber'
-                  }`}
-                  style={{ width: `${Math.min(100, usagePercentage)}%` }}
-                />
-              </div>
-            </div>
-          </div>
+        {/* Right Actions */}
+        <div className="flex items-center gap-2.5">
+          {/* Theme Switcher: Cream Linen vs Espresso Night */}
+          <button
+            onClick={onToggleTheme}
+            className="p-2 rounded-xl text-theme-muted hover:text-theme-main hover:bg-theme-subtle border border-theme-border transition-colors"
+            title={isDark ? 'Switch to Warm Cream (Light)' : 'Switch to Espresso Night (Dark)'}
+            aria-label="Toggle theme"
+          >
+            {isDark ? <Sun className="w-4 h-4 text-palette-amber" /> : <Moon className="w-4 h-4" />}
+          </button>
 
           {user ? (
             <div className="flex items-center gap-2">
               <button
                 onClick={onOpenApiKey}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-espresso-850 hover:bg-espresso-800 text-xs font-mono text-palette-cream border border-espresso-750 transition-all"
-                title="View & rotate API key"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-theme-subtle text-xs font-medium text-theme-main border border-theme-border hover:border-theme-border-hover transition-colors"
+                title="Developer API Key"
               >
-                <Key className="w-3.5 h-3.5 text-palette-amber" />
+                <Key className="w-3.5 h-3.5 text-palette-terracotta" />
                 <span>API Key</span>
               </button>
 
-              <div className="flex items-center gap-2 pl-2 border-l border-espresso-800">
-                <div className="flex items-center gap-2 bg-espresso-850/80 px-2.5 py-1.5 rounded-lg border border-espresso-700/60">
-                  <div className="w-6 h-6 rounded-md bg-brand-600/30 text-palette-amber flex items-center justify-center font-bold text-xs">
+              <div className="flex items-center gap-2 pl-2 border-l border-theme-border">
+                <div className="flex items-center gap-2 px-2 py-1 rounded-xl bg-theme-subtle/80 border border-theme-border">
+                  <div className="w-6 h-6 rounded-lg bg-palette-terracotta/15 text-palette-terracotta flex items-center justify-center font-bold text-xs">
                     {user.fullName ? user.fullName[0].toUpperCase() : 'U'}
                   </div>
-                  <span className="text-xs font-medium text-palette-cream hidden md:inline">
+                  <span className="text-xs font-semibold text-theme-main hidden sm:inline">
                     {user.fullName || user.email.split('@')[0]}
-                  </span>
-                  <span className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded bg-brand-600/20 text-palette-amber border border-brand-500/30 uppercase">
-                    {user.tier}
                   </span>
                 </div>
                 <button
                   onClick={onLogout}
-                  className="p-1.5 rounded-lg text-amber-200/60 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                  className="p-1.5 rounded-lg text-theme-faint hover:text-rose-500 transition-colors"
                   title="Logout"
                 >
                   <LogOut className="w-4 h-4" />
@@ -148,10 +134,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <button
               onClick={onOpenAuth}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-palette-cream text-sm font-semibold shadow-lg shadow-brand-600/30 transition-all border border-brand-400/30"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-palette-terracotta hover:bg-brand-700 text-palette-cream text-xs font-semibold shadow-sm transition-all"
             >
-              <UserIcon className="w-4 h-4" />
-              <span>Login / Demo</span>
+              <UserIcon className="w-3.5 h-3.5" />
+              <span>Sign In</span>
             </button>
           )}
 

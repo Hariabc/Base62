@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Sparkles, Layers, ArrowUpRight, BarChart3, Database, Cpu, Globe,
-  ShieldAlert, RefreshCw, Terminal, ExternalLink, HelpCircle
+  Sparkles, Database, Cpu, Globe, ExternalLink
 } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { UrlShortenerCard } from './components/UrlShortenerCard';
@@ -12,7 +11,7 @@ import { AuthModal } from './components/AuthModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { QrCodeModal } from './components/QrCodeModal';
 import { User, UrlItem, AnalyticsOverview } from './types';
-import { authApi, urlApi, analyticsApi, setRateLimitListener, RateLimitInfo } from './api/client';
+import { authApi, urlApi, analyticsApi } from './api/client';
 
 export const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -21,7 +20,9 @@ export const App: React.FC = () => {
   const [analytics, setAnalytics] = useState<AnalyticsOverview | null>(null);
   const [selectedUrl, setSelectedUrl] = useState<UrlItem | null>(null);
   const [activeTab, setActiveTab] = useState<'links' | 'analytics' | 'ai' | 'docs'>('links');
-  const [rateLimit, setRateLimit] = useState<RateLimitInfo>({ limit: 1000, remaining: 985, resetSeconds: 60 });
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    return localStorage.getItem('base62_theme') === 'dark';
+  });
 
   // Modals
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -30,10 +31,20 @@ export const App: React.FC = () => {
   const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
   const [aiInitialQuestion, setAiInitialQuestion] = useState<string | undefined>(undefined);
 
-  // Hook rate limit listener
+  // Sync theme with HTML class
   useEffect(() => {
-    setRateLimitListener((info) => setRateLimit(info));
-  }, []);
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('base62_theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('base62_theme', 'light');
+    }
+  }, [isDark]);
+
+  const toggleTheme = () => {
+    setIsDark((prev) => !prev);
+  };
 
   // Check auth and load initial data
   useEffect(() => {
@@ -50,7 +61,7 @@ export const App: React.FC = () => {
         console.warn('Existing token expired or backend offline', e);
       }
     } else {
-      // Auto-login with Demo account for a zero-friction recruiter experience
+      // Auto-login with Demo account for immediate access
       try {
         const res = await authApi.login('demo@base62.ai', 'password123');
         localStorage.setItem('base62_token', res.token);
@@ -93,7 +104,7 @@ export const App: React.FC = () => {
   };
 
   const handleDeleteUrl = async (id: number) => {
-    if (!window.confirm('Delete this short URL? Cache will be evicted and redirect will cease.')) return;
+    if (!window.confirm('Delete this short link?')) return;
     try {
       await urlApi.deleteUrl(id);
       setUrls((prev) => prev.filter((u) => u.id !== id));
@@ -132,11 +143,10 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-espresso-950 text-palette-cream flex flex-col font-sans selection:bg-brand-600 selection:text-palette-cream">
-      {/* Navigation */}
+    <div className="min-h-screen bg-theme-page text-theme-main flex flex-col font-sans transition-colors selection:bg-palette-terracotta selection:text-palette-cream">
+      {/* Aesthetic Minimal Navbar */}
       <Navbar
         user={user}
-        rateLimit={rateLimit}
         activeTab={activeTab}
         setActiveTab={(tab) => {
           if (tab === 'ai') {
@@ -149,21 +159,21 @@ export const App: React.FC = () => {
         onOpenAuth={() => setAuthModalOpen(true)}
         onOpenApiKey={() => setApiKeyModalOpen(true)}
         onLogout={handleLogout}
+        isDark={isDark}
+        onToggleTheme={toggleTheme}
       />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8">
         
-        {/* TAB 1: LINKS MANAGEMENT */}
+        {/* TAB 1: LINKS */}
         {activeTab === 'links' && (
-          <div className="space-y-8 animate-in fade-in-50 duration-200">
-            {/* Top Shortener Hero */}
+          <div className="space-y-6 animate-in fade-in-50 duration-200">
             <UrlShortenerCard
               onUrlCreated={handleUrlCreated}
               onOpenQr={(url) => setQrModalUrl(url)}
             />
 
-            {/* Links Table */}
             <UrlTable
               urls={urls}
               loading={loadingUrls}
@@ -187,64 +197,59 @@ export const App: React.FC = () => {
           </div>
         )}
 
-        {/* TAB 3: SWAGGER & SYSTEM ARCHITECTURE DOCS */}
+        {/* TAB 3: API & SPECS */}
         {activeTab === 'docs' && (
-          <div className="space-y-6 animate-in fade-in-50 duration-200">
-            <div className="p-6 rounded-2xl bg-espresso-900 border border-espresso-800 shadow-xl">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <div>
-                  <h3 className="text-xl font-bold text-palette-cream flex items-center gap-2">
-                    <span>Engineering Specifications & OpenAPI</span>
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-brand-500/20 text-brand-400 font-mono border border-brand-500/30">
-                      Springdoc v2.6.0
-                    </span>
-                  </h3>
-                  <p className="text-xs text-amber-200/70 mt-1">
-                    Explore live interactive Swagger UI endpoints, schemas, and rate-limiting headers.
-                  </p>
+          <div className="card-aesthetic rounded-2xl p-6 sm:p-8 animate-in fade-in-50 duration-200 space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-theme-border">
+              <div>
+                <h2 className="text-xl font-bold text-theme-main">
+                  Developer API & Specifications
+                </h2>
+                <p className="text-xs text-theme-muted mt-1">
+                  Integrate Base62 into your apps with low-latency REST endpoints.
+                </p>
+              </div>
+              <a
+                href="/swagger-ui/index.html"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-palette-terracotta hover:bg-brand-700 text-palette-cream text-xs font-semibold shadow-xs transition-colors"
+              >
+                <span>Interactive Swagger UI</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            {/* Architecture Highlights */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-theme-subtle/50 border border-theme-border">
+                <div className="flex items-center gap-2 text-palette-terracotta text-xs font-bold mb-1.5">
+                  <Database className="w-4 h-4" />
+                  <span>Sub-ms Redis Caching</span>
                 </div>
-                <a
-                  href="/swagger-ui/index.html"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-palette-cream text-xs font-semibold shadow-lg shadow-brand-600/30 transition-all border border-brand-500/40"
-                >
-                  <span>Open Swagger UI</span>
-                  <ExternalLink className="w-4 h-4" />
-                </a>
+                <p className="text-xs text-theme-muted leading-relaxed">
+                  Redirects query Redis memory for sub-5ms latency, falling back to database on cache miss.
+                </p>
               </div>
 
-              {/* Architectural Highlights Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 rounded-xl bg-espresso-950 border border-espresso-800">
-                  <div className="flex items-center gap-2 text-brand-400 text-xs font-bold mb-2">
-                    <Database className="w-4 h-4 text-brand-400" />
-                    <span>Sub-ms Redis Caching</span>
-                  </div>
-                  <p className="text-xs text-amber-100/70 leading-relaxed">
-                    Redirects query Redis key <code className="text-brand-300 font-mono text-[11px] bg-espresso-900 px-1 py-0.5 rounded">base62:url:&#123;code&#125;</code> for ultra-low latency reads. Database hits occur only on cache misses with automatic cache warming.
-                  </p>
+              <div className="p-4 rounded-xl bg-theme-subtle/50 border border-theme-border">
+                <div className="flex items-center gap-2 text-palette-amber text-xs font-bold mb-1.5">
+                  <Cpu className="w-4 h-4" />
+                  <span>Token Bucket Limiter</span>
                 </div>
+                <p className="text-xs text-theme-muted leading-relaxed">
+                  Sliding-window rate limits per API key with standard <code className="font-mono text-[10px]">X-RateLimit-*</code> response headers.
+                </p>
+              </div>
 
-                <div className="p-4 rounded-xl bg-espresso-950 border border-espresso-800">
-                  <div className="flex items-center gap-2 text-palette-amber text-xs font-bold mb-2">
-                    <Cpu className="w-4 h-4 text-palette-amber" />
-                    <span>Distributed Rate Limiter</span>
-                  </div>
-                  <p className="text-xs text-amber-100/70 leading-relaxed">
-                    Token bucket rate limiting enforced in Redis. Responds with <code className="text-brand-300 font-mono text-[11px] bg-espresso-900 px-1 py-0.5 rounded">HTTP 429 Too Many Requests</code> and <code className="text-brand-300 font-mono text-[11px] bg-espresso-900 px-1 py-0.5 rounded">X-RateLimit-*</code> headers.
-                  </p>
+              <div className="p-4 rounded-xl bg-theme-subtle/50 border border-theme-border">
+                <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-xs font-bold mb-1.5">
+                  <Globe className="w-4 h-4" />
+                  <span>Async Event Pipeline</span>
                 </div>
-
-                <div className="p-4 rounded-xl bg-espresso-950 border border-espresso-800">
-                  <div className="flex items-center gap-2 text-brand-300 text-xs font-bold mb-2">
-                    <Globe className="w-4 h-4 text-brand-300" />
-                    <span>Decoupled Click Pipeline</span>
-                  </div>
-                  <p className="text-xs text-amber-100/70 leading-relaxed">
-                    Redirect requests fire non-blocking asynchronous events. Telemetry ingestion, UA parsing, and GeoIP enrichment run in parallel worker pools without delaying visitor redirects.
-                  </p>
-                </div>
+                <p className="text-xs text-theme-muted leading-relaxed">
+                  Click logging and GeoIP telemetry execute asynchronously without blocking 302 redirects.
+                </p>
               </div>
             </div>
           </div>
@@ -252,17 +257,17 @@ export const App: React.FC = () => {
 
       </main>
 
-      {/* Floating Action Button for AI Assistant */}
-      <aside aria-label="Quick Actions" className="fixed bottom-6 right-6 z-30">
+      {/* Aesthetic Floating AI Pill */}
+      <aside aria-label="AI Assistant" className="fixed bottom-6 right-6 z-30">
         <button
           onClick={() => {
             setAiInitialQuestion(undefined);
             setAiDrawerOpen(true);
           }}
-          className="flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-brand-600 via-brand-500 to-palette-amber text-palette-cream font-semibold text-xs sm:text-sm shadow-2xl shadow-brand-600/40 hover:scale-105 active:scale-95 transition-all border border-brand-400/40 glow-brand"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-palette-terracotta hover:bg-brand-700 active:scale-95 text-palette-cream font-medium text-xs shadow-lg transition-all border border-palette-cream/20"
         >
-          <Sparkles className="w-4 h-4 text-palette-cream animate-spin" />
-          <span>Ask Base62 AI</span>
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Ask AI</span>
         </button>
       </aside>
 

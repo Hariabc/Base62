@@ -2,11 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-page: #FEF3E2;
+  --bg-card: #FFFFFF;
+  --bg-subtle: #F7EAD7;
+  --bg-input: #FFFFFF;
+  --border-subtle: rgba(42, 26, 14, 0.08);
+  --border-hover: rgba(42, 26, 14, 0.18);
+  --text-main: #2A1A0E;
+  --text-muted: #755E4E;
+  --text-faint: #A69282;
+  --brand-primary: #D4621A;
+  --brand-primary-hover: #BF5313;
+  --brand-secondary: #F4AE52;
+  --shadow-card: 0 4px 24px -2px rgba(42, 26, 14, 0.06);
+}
+
+.dark {
+  --bg-page: #1D120A;
+  --bg-card: #2A1A0E;
+  --bg-subtle: #382415;
+  --bg-input: #23150B;
+  --border-subtle: rgba(254, 243, 226, 0.08);
+  --border-hover: rgba(254, 243, 226, 0.18);
+  --text-main: #FEF3E2;
+  --text-muted: #D1C0B2;
+  --text-faint: #9A8778;
+  --brand-primary: #D4621A;
+  --brand-primary-hover: #E2722A;
+  --brand-secondary: #F4AE52;
+  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
+}
+
 @layer base {
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    background-color: #1D120A;
-    color: #FEF3E2;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    transition: background-color 0.25s ease, color 0.25s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   code, pre {
@@ -14,34 +49,33 @@
   }
 }
 
-/* Custom warm espresso scrollbars */
+/* Custom aesthetic scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1D120A;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #52341F;
-  border-radius: 4px;
+  background: rgba(212, 98, 26, 0.2);
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #73492B;
+  background: rgba(212, 98, 26, 0.4);
 }
 
-/* Glowing effects matching Terracotta #D4621A and Amber #F4AE52 */
-.glow-brand {
-  box-shadow: 0 0 50px -10px rgba(212, 98, 26, 0.45);
+/* Subtle aesthetic utility classes */
+.card-aesthetic {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glow-amber {
-  box-shadow: 0 0 40px -10px rgba(244, 174, 82, 0.35);
-}
-
-.glow-card {
-  box-shadow: 0 20px 40px -15px rgba(29, 18, 10, 0.95);
+.card-aesthetic:hover {
+  border-color: var(--border-hover);
 }
