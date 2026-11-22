@@ -1,0 +1,61 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+
+spring:
+  application:
+    name: base62-backend
+  profiles:
+    active: dev
+
+base62:
+  app:
+    jwt-secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970337336763979244226452948404D6351
+    jwt-expiration-ms: 86400000 # 24 hours
+    base-url: ${BASE62_BASE_URL:${LINKMIND_BASE_URL:http://localhost:8080}}
+    frontend-url: ${BASE62_FRONTEND_URL:${LINKMIND_FRONTEND_URL:http://localhost:5173}}
+  ai:
+    api-key: ${AI_API_KEY:mock}
+    provider: ${AI_PROVIDER:simulated} # simulated, openai, or gemini
+    model: ${AI_MODEL:gpt-4o-mini}
+  rate-limit:
+    enabled: true
+    free-limit: 100
+    pro-limit: 1000
+    anonymous-limit: 20
+
+# Backward compatibility alias
+linkmind:
+  app:
+    jwt-secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970337336763979244226452948404D6351
+    jwt-expiration-ms: 86400000
+    base-url: ${BASE62_BASE_URL:${LINKMIND_BASE_URL:http://localhost:8080}}
+    frontend-url: ${BASE62_FRONTEND_URL:${LINKMIND_FRONTEND_URL:http://localhost:5173}}
+  ai:
+    api-key: ${AI_API_KEY:mock}
+    provider: ${AI_PROVIDER:simulated}
+    model: ${AI_MODEL:gpt-4o-mini}
+  rate-limit:
+    enabled: true
+    free-limit: 100
+    pro-limit: 1000
+    anonymous-limit: 20
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
