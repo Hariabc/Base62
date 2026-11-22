@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, BarChart, Bar,
+  PieChart, Pie, Cell,
 } from 'recharts';
 import { TrendingUp, TrendingDown, Smartphone, Globe, Compass, Sparkles, Activity, ShieldCheck } from 'lucide-react';
 import { AnalyticsOverview, UrlItem } from '../types';
@@ -13,7 +13,8 @@ interface AnalyticsViewProps {
   onOpenAiChat: (question?: string) => void;
 }
 
-const DEVICE_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899'];
+// Warm palette colors matching ColorHunt fef3e2f4ae52d4621a2a1a0e
+const DEVICE_COLORS = ['#D4621A', '#F4AE52', '#E28C38', '#B85213', '#F9CA7A'];
 
 export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
   analytics,
@@ -23,7 +24,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
 }) => {
   if (!analytics) {
     return (
-      <div className="rounded-2xl bg-slate-900/60 border border-slate-800 p-12 text-center text-slate-500">
+      <div className="rounded-2xl bg-espresso-900/60 border border-espresso-800 p-12 text-center text-amber-200/50">
         Loading analytics stream...
       </div>
     );
@@ -34,31 +35,31 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Selected URL Banner or Global Portfolio Notice */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-950 border border-slate-800">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-r from-espresso-900 to-espresso-950 border border-espresso-800">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold text-palette-cream">
               {selectedUrl ? `Analytics for: ${selectedUrl.title}` : 'All Links Performance (Portfolio View)'}
             </h3>
             {selectedUrl && (
               <button
                 onClick={onClearSelectedUrl}
-                className="text-xs text-brand-400 hover:text-brand-300 underline font-medium"
+                className="text-xs text-palette-amber hover:text-amber-300 underline font-medium"
               >
                 (View All Links)
               </button>
             )}
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-amber-100/60 mt-0.5">
             {selectedUrl ? selectedUrl.originalUrl : 'Real-time telemetry gathered across your global link redirects.'}
           </p>
         </div>
 
         <button
           onClick={() => onOpenAiChat("Why did my link traffic decrease this week?")}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 hover:opacity-95 text-white text-xs font-semibold shadow-lg shadow-purple-500/20 transition-all"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-600 via-brand-500 to-palette-amber hover:opacity-95 text-espresso-950 font-bold text-xs shadow-lg shadow-brand-600/25 transition-all border border-brand-400/30"
         >
-          <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+          <Sparkles className="w-3.5 h-3.5 text-espresso-950 animate-spin" />
           <span>Ask AI: Why Did Traffic Shift?</span>
         </button>
       </div>
@@ -66,12 +67,12 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Clicks */}
-        <div className="p-5 rounded-2xl bg-slate-900/70 border border-slate-800 shadow-lg">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+        <div className="p-5 rounded-2xl bg-espresso-900/80 border border-espresso-800 shadow-lg">
+          <div className="flex items-center justify-between text-amber-200/60 text-xs font-medium">
             <span>Total Click Stream</span>
-            <Activity className="w-4 h-4 text-brand-400" />
+            <Activity className="w-4 h-4 text-palette-amber" />
           </div>
-          <div className="text-3xl font-extrabold text-white mt-2 font-mono">
+          <div className="text-3xl font-extrabold text-palette-cream mt-2 font-mono">
             {analytics.totalClicks.toLocaleString()}
           </div>
           <div className="flex items-center gap-1.5 mt-2 text-xs">
@@ -84,20 +85,20 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                 <TrendingDown className="w-3.5 h-3.5 mr-0.5" /> {analytics.weeklyChangePercentage}%
               </span>
             )}
-            <span className="text-slate-500">vs prior 7 days</span>
+            <span className="text-amber-200/40">vs prior 7 days</span>
           </div>
         </div>
 
         {/* Top Referral Channel */}
-        <div className="p-5 rounded-2xl bg-slate-900/70 border border-slate-800 shadow-lg">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+        <div className="p-5 rounded-2xl bg-espresso-900/80 border border-espresso-800 shadow-lg">
+          <div className="flex items-center justify-between text-amber-200/60 text-xs font-medium">
             <span>Primary Conversion Channel</span>
-            <Compass className="w-4 h-4 text-purple-400" />
+            <Compass className="w-4 h-4 text-brand-400" />
           </div>
-          <div className="text-xl font-bold text-white mt-2 truncate">
+          <div className="text-xl font-bold text-palette-cream mt-2 truncate">
             {analytics.topReferrers.length > 0 ? analytics.topReferrers[0].name : 'Direct / Unknown'}
           </div>
-          <div className="text-xs text-slate-400 mt-2">
+          <div className="text-xs text-amber-100/60 mt-2">
             {analytics.topReferrers.length > 0
               ? `${analytics.topReferrers[0].percentage}% of total inbound traffic`
               : 'Direct visitors'}
@@ -105,42 +106,42 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </div>
 
         {/* Primary Device */}
-        <div className="p-5 rounded-2xl bg-slate-900/70 border border-slate-800 shadow-lg">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+        <div className="p-5 rounded-2xl bg-espresso-900/80 border border-espresso-800 shadow-lg">
+          <div className="flex items-center justify-between text-amber-200/60 text-xs font-medium">
             <span>Dominant Platform</span>
-            <Smartphone className="w-4 h-4 text-indigo-400" />
+            <Smartphone className="w-4 h-4 text-palette-amber" />
           </div>
-          <div className="text-xl font-bold text-white mt-2">
+          <div className="text-xl font-bold text-palette-cream mt-2">
             {analytics.devices.length > 0 ? analytics.devices[0].name : 'Desktop'}
           </div>
-          <div className="text-xs text-slate-400 mt-2">
+          <div className="text-xs text-amber-100/60 mt-2">
             {analytics.devices.length > 0 ? `${analytics.devices[0].percentage}% market share` : 'Balanced'}
           </div>
         </div>
 
         {/* Top Region */}
-        <div className="p-5 rounded-2xl bg-slate-900/70 border border-slate-800 shadow-lg">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+        <div className="p-5 rounded-2xl bg-espresso-900/80 border border-espresso-800 shadow-lg">
+          <div className="flex items-center justify-between text-amber-200/60 text-xs font-medium">
             <span>Top Geographic Market</span>
-            <Globe className="w-4 h-4 text-emerald-400" />
+            <Globe className="w-4 h-4 text-brand-300" />
           </div>
-          <div className="text-xl font-bold text-white mt-2 truncate">
+          <div className="text-xl font-bold text-palette-cream mt-2 truncate">
             {analytics.topCountries.length > 0 ? analytics.topCountries[0].countryName : 'Global'}
           </div>
-          <div className="text-xs text-slate-400 mt-2">
+          <div className="text-xs text-amber-100/60 mt-2">
             {analytics.topCountries.length > 0 ? `${analytics.topCountries[0].percentage}% international reach` : 'Global coverage'}
           </div>
         </div>
       </div>
 
       {/* Main Time-Series Traffic Chart */}
-      <div className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 shadow-xl">
+      <div className="p-6 rounded-2xl bg-espresso-900/80 border border-espresso-800 shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h4 className="text-sm font-bold text-white">Daily Traffic Velocity</h4>
-            <p className="text-xs text-slate-400">Chronological click volume across the selected window.</p>
+            <h4 className="text-sm font-bold text-palette-cream">Daily Traffic Velocity</h4>
+            <p className="text-xs text-amber-100/60">Chronological click volume across the selected window.</p>
           </div>
-          <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+          <div className="flex items-center gap-2 text-xs font-mono text-palette-amber bg-brand-500/15 px-2.5 py-1 rounded-lg border border-brand-500/30">
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Async Ingestion Pipeline</span>
           </div>
@@ -150,23 +151,24 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={analytics.timeSeries} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
-                <linearGradient id="clickGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#0e8ce9" stopOpacity={0.6} />
-                  <stop offset="95%" stopColor="#0e8ce9" stopOpacity={0.0} />
+                <linearGradient id="warmClickGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#D4621A" stopOpacity={0.7} />
+                  <stop offset="50%" stopColor="#F4AE52" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#2A1A0E" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="date" stroke="#64748b" fontSize={11} tickLine={false} />
-              <YAxis stroke="#64748b" fontSize={11} tickLine={false} allowDecimals={false} />
+              <XAxis dataKey="date" stroke="#9A8068" fontSize={11} tickLine={false} />
+              <YAxis stroke="#9A8068" fontSize={11} tickLine={false} allowDecimals={false} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#020617',
-                  borderColor: '#1e293b',
+                  backgroundColor: '#1D120A',
+                  borderColor: '#52341F',
                   borderRadius: '0.75rem',
                   fontSize: '12px',
-                  color: '#fff',
+                  color: '#FEF3E2',
                 }}
               />
-              <Area type="monotone" dataKey="clicks" stroke="#38a9f8" strokeWidth={3} fillOpacity={1} fill="url(#clickGradient)" />
+              <Area type="monotone" dataKey="clicks" stroke="#F4AE52" strokeWidth={3} fillOpacity={1} fill="url(#warmClickGradient)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -176,10 +178,10 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Device Breakdown Donut */}
-        <div className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 shadow-xl flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-espresso-900/80 border border-espresso-800 shadow-xl flex flex-col justify-between">
           <div>
-            <h4 className="text-sm font-bold text-white">Device Breakdown</h4>
-            <p className="text-xs text-slate-400 mb-4">Distribution by client viewport category.</p>
+            <h4 className="text-sm font-bold text-palette-cream">Device Breakdown</h4>
+            <p className="text-xs text-amber-100/60 mb-4">Distribution by client viewport category.</p>
           </div>
 
           <div className="h-52 w-full flex items-center justify-center">
@@ -202,65 +204,66 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#020617',
-                      borderColor: '#1e293b',
+                      backgroundColor: '#1D120A',
+                      borderColor: '#52341F',
                       borderRadius: '0.75rem',
                       fontSize: '12px',
+                      color: '#FEF3E2',
                     }}
                   />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-slate-500 text-xs">No device data available.</div>
+              <div className="text-amber-200/50 text-xs">No device data available.</div>
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-2 pt-4 border-t border-slate-800 text-center">
+          <div className="grid grid-cols-3 gap-2 pt-4 border-t border-espresso-800 text-center">
             {analytics.devices.map((item, idx) => (
-              <div key={item.name} className="p-2 rounded-lg bg-slate-950/60">
-                <div className="flex items-center justify-center gap-1.5 text-xs text-slate-400">
+              <div key={item.name} className="p-2 rounded-lg bg-espresso-950/70 border border-espresso-800">
+                <div className="flex items-center justify-center gap-1.5 text-xs text-amber-200/70">
                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: DEVICE_COLORS[idx % DEVICE_COLORS.length] }} />
                   <span className="font-medium">{item.name}</span>
                 </div>
-                <div className="text-sm font-bold text-white mt-1 font-mono">{item.percentage}%</div>
+                <div className="text-sm font-bold text-palette-cream mt-1 font-mono">{item.percentage}%</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Top Referrers */}
-        <div className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 shadow-xl flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-espresso-900/80 border border-espresso-800 shadow-xl flex flex-col justify-between">
           <div>
-            <h4 className="text-sm font-bold text-white">Inbound Referrer Sources</h4>
-            <p className="text-xs text-slate-400 mb-4">Top platforms driving audience engagement.</p>
+            <h4 className="text-sm font-bold text-palette-cream">Inbound Referrer Sources</h4>
+            <p className="text-xs text-amber-100/60 mb-4">Top platforms driving audience engagement.</p>
           </div>
 
           <div className="space-y-3">
             {analytics.topReferrers.length > 0 ? (
-              analytics.topReferrers.map((ref, idx) => (
+              analytics.topReferrers.map((ref) => (
                 <div key={ref.name} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-slate-300 truncate max-w-[200px]">{ref.name}</span>
-                    <span className="font-mono text-slate-400 font-semibold">{ref.count} clicks ({ref.percentage}%)</span>
+                    <span className="font-medium text-amber-100/90 truncate max-w-[200px]">{ref.name}</span>
+                    <span className="font-mono text-amber-200/70 font-semibold">{ref.count} clicks ({ref.percentage}%)</span>
                   </div>
-                  <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                  <div className="w-full h-2 bg-espresso-950 rounded-full overflow-hidden border border-espresso-800">
                     <div
-                      className="h-full bg-gradient-to-r from-brand-500 to-indigo-500 rounded-full transition-all"
+                      className="h-full bg-gradient-to-r from-brand-600 to-palette-amber rounded-full transition-all"
                       style={{ width: `${ref.percentage}%` }}
                     />
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-slate-500 text-xs py-10 text-center">No referrer data recorded yet.</div>
+              <div className="text-amber-200/50 text-xs py-10 text-center">No referrer data recorded yet.</div>
             )}
           </div>
 
-          <div className="pt-4 mt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
+          <div className="pt-4 mt-2 border-t border-espresso-800 flex items-center justify-between text-[11px] text-amber-200/50">
             <span>Automated HTTP Referer header analysis</span>
             <button
               onClick={() => onOpenAiChat("How can I improve my referrer conversions?")}
-              className="text-brand-400 hover:text-brand-300 underline font-medium"
+              className="text-palette-amber hover:text-amber-300 underline font-medium"
             >
               Analyze with AI
             </button>
@@ -269,20 +272,20 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       </div>
 
       {/* Top Countries Table */}
-      <div className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 shadow-xl">
-        <h4 className="text-sm font-bold text-white mb-1">Geographic Distribution</h4>
-        <p className="text-xs text-slate-400 mb-4">Click origins determined via MaxMind / Edge IP Geolocation.</p>
+      <div className="p-6 rounded-2xl bg-espresso-900/80 border border-espresso-800 shadow-xl">
+        <h4 className="text-sm font-bold text-palette-cream mb-1">Geographic Distribution</h4>
+        <p className="text-xs text-amber-100/60 mb-4">Click origins determined via MaxMind / Edge IP Geolocation.</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
           {analytics.topCountries.map((c) => (
-            <div key={c.countryCode} className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-center justify-between">
+            <div key={c.countryCode} className="p-3.5 rounded-xl bg-espresso-950/70 border border-espresso-800 flex items-center justify-between">
               <div>
-                <div className="text-xs font-bold text-white">{c.countryName}</div>
-                <div className="text-[10px] text-slate-400 font-mono">Code: {c.countryCode}</div>
+                <div className="text-xs font-bold text-palette-cream">{c.countryName}</div>
+                <div className="text-[10px] text-amber-200/60 font-mono">Code: {c.countryCode}</div>
               </div>
               <div className="text-right">
-                <div className="text-xs font-extrabold text-brand-400 font-mono">{c.count}</div>
-                <div className="text-[10px] text-slate-400">{c.percentage}%</div>
+                <div className="text-xs font-extrabold text-palette-amber font-mono">{c.count}</div>
+                <div className="text-[10px] text-amber-200/60">{c.percentage}%</div>
               </div>
             </div>
           ))}

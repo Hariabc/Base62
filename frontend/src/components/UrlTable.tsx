@@ -37,30 +37,30 @@ export const UrlTable: React.FC<UrlTableProps> = ({
   };
 
   return (
-    <div className="rounded-2xl bg-slate-900/70 border border-slate-800 shadow-xl overflow-hidden backdrop-blur-xl">
+    <div className="rounded-2xl bg-espresso-900/80 border border-espresso-800 shadow-xl overflow-hidden backdrop-blur-xl">
       {/* Header bar */}
-      <div className="p-4 sm:p-6 border-b border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 border-b border-espresso-800 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+          <h3 className="text-lg font-bold text-palette-cream flex items-center gap-2">
             <span>Link Management</span>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-espresso-950 text-palette-amber font-mono border border-espresso-800">
               {urls.length} URLs
             </span>
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-amber-100/60 mt-0.5">
             Distributed URLs with sub-millisecond Redis redirection and click tracking.
           </p>
         </div>
 
         {/* Search bar */}
         <div className="relative w-full sm:w-72">
-          <Search className="w-4 h-4 text-slate-500 absolute inset-y-0 left-3 my-auto pointer-events-none" />
+          <Search className="w-4 h-4 text-amber-200/50 absolute inset-y-0 left-3 my-auto pointer-events-none" />
           <input
             type="text"
             placeholder="Search by title, alias, or URL..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-950/80 border border-slate-700/80 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="w-full pl-9 pr-3 py-2 rounded-xl bg-espresso-950/90 border border-espresso-750 text-xs text-palette-cream placeholder-amber-200/40 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
       </div>
@@ -68,7 +68,7 @@ export const UrlTable: React.FC<UrlTableProps> = ({
       {/* Table view */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
-          <thead className="bg-slate-950/60 text-slate-400 font-semibold uppercase tracking-wider text-[10px] border-b border-slate-800">
+          <thead className="bg-espresso-950/70 text-amber-200/60 font-semibold uppercase tracking-wider text-[10px] border-b border-espresso-800">
             <tr>
               <th className="py-3 px-4">Title & Original Link</th>
               <th className="py-3 px-4">Short Code & Alias</th>
@@ -78,29 +78,29 @@ export const UrlTable: React.FC<UrlTableProps> = ({
               <th className="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60 text-slate-300">
+          <tbody className="divide-y divide-espresso-800/60 text-amber-100/90">
             {loading ? (
               <tr>
-                <td colSpan={6} className="py-8 text-center text-slate-500">
+                <td colSpan={6} className="py-8 text-center text-amber-200/50">
                   Loading URLs...
                 </td>
               </tr>
             ) : filteredUrls.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-12 text-center text-slate-500">
+                <td colSpan={6} className="py-12 text-center text-amber-200/50">
                   {searchTerm ? 'No links matching search criteria.' : 'No shortened links yet. Create one above!'}
                 </td>
               </tr>
             ) : (
               filteredUrls.map((url) => (
-                <tr key={url.id} className="hover:bg-slate-800/40 transition-colors group">
+                <tr key={url.id} className="hover:bg-espresso-850/50 transition-colors group">
                   {/* Title & Original Link */}
                   <td className="py-3.5 px-4 max-w-xs">
-                    <div className="font-semibold text-white truncate text-sm">
+                    <div className="font-semibold text-palette-cream truncate text-sm">
                       {url.title || 'Untitled Link'}
                     </div>
-                    <div className="text-[11px] text-slate-400 truncate flex items-center gap-1.5 mt-0.5">
-                      <Globe className="w-3 h-3 text-slate-500 flex-shrink-0" />
+                    <div className="text-[11px] text-amber-200/60 truncate flex items-center gap-1.5 mt-0.5">
+                      <Globe className="w-3 h-3 text-amber-200/40 flex-shrink-0" />
                       <span className="truncate">{url.originalUrl}</span>
                     </div>
                   </td>
@@ -112,13 +112,13 @@ export const UrlTable: React.FC<UrlTableProps> = ({
                         href={url.shortUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-bold text-brand-400 hover:text-brand-300 hover:underline"
+                        className="font-bold text-palette-amber hover:text-amber-300 hover:underline"
                       >
                         {url.customAlias ? `/r/${url.customAlias}` : `/r/${url.shortCode}`}
                       </a>
                       <button
                         onClick={() => copyShortUrl(url.id, url.shortUrl)}
-                        className="text-slate-500 hover:text-slate-200 transition-colors"
+                        className="text-amber-200/40 hover:text-palette-cream transition-colors"
                         title="Copy short link"
                       >
                         {copiedId === url.id ? (
@@ -129,7 +129,7 @@ export const UrlTable: React.FC<UrlTableProps> = ({
                       </button>
                     </div>
                     {url.customAlias && (
-                      <span className="text-[10px] text-slate-500 font-sans">
+                      <span className="text-[10px] text-amber-200/40 font-sans">
                         code: {url.shortCode}
                       </span>
                     )}
@@ -138,15 +138,15 @@ export const UrlTable: React.FC<UrlTableProps> = ({
                   {/* Status */}
                   <td className="py-3.5 px-4">
                     {url.isExpired ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/20">
                         <Clock className="w-2.5 h-2.5" /> Expired
                       </span>
                     ) : url.isActive ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
                         Active
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-palette-amber/15 text-palette-amber border border-palette-amber/30">
                         Paused
                       </span>
                     )}
@@ -154,14 +154,14 @@ export const UrlTable: React.FC<UrlTableProps> = ({
 
                   {/* Clicks */}
                   <td className="py-3.5 px-4">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 font-mono font-bold text-slate-200 text-xs">
-                      <span className="text-brand-400">⚡</span>
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-espresso-950 font-mono font-bold text-palette-cream text-xs border border-espresso-800">
+                      <span className="text-palette-amber">⚡</span>
                       <span>{url.clickCount.toLocaleString()}</span>
                     </div>
                   </td>
 
                   {/* Created At */}
-                  <td className="py-3.5 px-4 text-slate-400 font-mono text-[11px]">
+                  <td className="py-3.5 px-4 text-amber-200/60 font-mono text-[11px]">
                     {new Date(url.createdAt).toLocaleDateString()}
                   </td>
 
@@ -170,14 +170,14 @@ export const UrlTable: React.FC<UrlTableProps> = ({
                     <div className="inline-flex items-center gap-1">
                       <button
                         onClick={() => onSelectUrl(url)}
-                        className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-brand-600/30 text-slate-400 hover:text-brand-300 transition-colors"
+                        className="p-1.5 rounded-lg bg-espresso-850 hover:bg-brand-600/30 text-amber-200/60 hover:text-palette-amber transition-colors border border-espresso-800"
                         title="View Detailed Analytics"
                       >
                         <BarChart3 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => onOpenQr(url)}
-                        className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors"
+                        className="p-1.5 rounded-lg bg-espresso-850 hover:bg-espresso-800 text-amber-200/60 hover:text-palette-cream transition-colors border border-espresso-800"
                         title="View QR Code"
                       >
                         <QrCode className="w-4 h-4" />
@@ -186,14 +186,14 @@ export const UrlTable: React.FC<UrlTableProps> = ({
                         href={url.shortUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors"
+                        className="p-1.5 rounded-lg bg-espresso-850 hover:bg-espresso-800 text-amber-200/60 hover:text-palette-cream transition-colors border border-espresso-800"
                         title="Open destination in new tab"
                       >
                         <ExternalLink className="w-4 h-4" />
                       </a>
                       <button
                         onClick={() => onDeleteUrl(url.id)}
-                        className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 transition-colors"
+                        className="p-1.5 rounded-lg bg-espresso-850 hover:bg-rose-500/20 text-amber-200/60 hover:text-rose-400 transition-colors border border-espresso-800"
                         title="Delete URL"
                       >
                         <Trash2 className="w-4 h-4" />

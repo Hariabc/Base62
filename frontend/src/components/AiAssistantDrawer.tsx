@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Sparkles, Send, Bot, User as UserIcon, Loader2, ArrowRight,
-  Lightbulb, Compass, Clock, CheckCircle2, X
+  Lightbulb, Compass, Clock, X
 } from 'lucide-react';
 import { AiChatMessage, AiInsights, UrlItem } from '../types';
 import { aiApi } from '../api/client';
@@ -127,30 +127,30 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-sm flex justify-end animate-in fade-in-50 duration-200">
-      <div className="w-full max-w-xl bg-slate-950 border-l border-slate-800 h-full flex flex-col shadow-2xl">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-espresso-950/80 backdrop-blur-sm flex justify-end animate-in fade-in-50 duration-200">
+      <div className="w-full max-w-xl bg-espresso-950 border-l border-espresso-800 h-full flex flex-col shadow-2xl">
         
         {/* Drawer Header */}
-        <div className="p-4 border-b border-slate-800 bg-slate-900/60 flex items-center justify-between">
+        <div className="p-4 border-b border-espresso-800 bg-espresso-900/80 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-500 to-purple-600 flex items-center justify-center text-white shadow-md shadow-purple-500/30">
-              <Sparkles className="w-5 h-5 animate-pulse" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-palette-amber flex items-center justify-center text-espresso-950 shadow-md shadow-brand-600/30">
+              <Sparkles className="w-5 h-5 text-palette-cream animate-pulse" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-white text-sm">Base62 AI Assistant</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                <h3 className="font-bold text-palette-cream text-sm">Base62 AI Assistant</h3>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-brand-500/20 text-palette-amber border border-brand-500/30">
                   GPT-4o / Heuristic Engine
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-amber-200/60">
                 {selectedUrl ? `Target: ${selectedUrl.title}` : 'Target: Portfolio Overview'}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-amber-200/60 hover:text-palette-cream hover:bg-espresso-850 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -158,29 +158,29 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({
 
         {/* AI Health Score Header Card */}
         {insights && (
-          <div className="p-4 bg-gradient-to-r from-slate-900 to-purple-950/40 border-b border-slate-800">
+          <div className="p-4 bg-gradient-to-r from-espresso-900 to-espresso-850 border-b border-espresso-800">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+              <span className="text-xs font-semibold text-amber-100/90 flex items-center gap-1.5">
+                <Lightbulb className="w-3.5 h-3.5 text-palette-amber" />
                 Engagement Health Score
               </span>
-              <span className="text-xs font-mono font-bold text-purple-300">
+              <span className="text-xs font-mono font-bold text-palette-amber">
                 {insights.engagementScore} / 100
               </span>
             </div>
-            <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mb-3">
+            <div className="w-full h-1.5 bg-espresso-950 rounded-full overflow-hidden mb-3">
               <div
-                className="h-full bg-gradient-to-r from-brand-500 via-indigo-500 to-purple-500 rounded-full transition-all duration-500"
+                className="h-full bg-gradient-to-r from-brand-600 via-brand-500 to-palette-amber rounded-full transition-all duration-500"
                 style={{ width: `${insights.engagementScore}%` }}
               />
             </div>
-            <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-400">
-              <div className="flex items-center gap-1.5 bg-slate-950/60 p-2 rounded-lg border border-slate-800/80">
-                <Clock className="w-3.5 h-3.5 text-brand-400 flex-shrink-0" />
+            <div className="grid grid-cols-2 gap-2 text-[11px] text-amber-200/70">
+              <div className="flex items-center gap-1.5 bg-espresso-950/70 p-2 rounded-lg border border-espresso-800">
+                <Clock className="w-3.5 h-3.5 text-palette-amber flex-shrink-0" />
                 <span className="truncate">Best: {insights.optimalPostingWindow}</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-slate-950/60 p-2 rounded-lg border border-slate-800/80">
-                <Compass className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+              <div className="flex items-center gap-1.5 bg-espresso-950/70 p-2 rounded-lg border border-espresso-800">
+                <Compass className="w-3.5 h-3.5 text-brand-400 flex-shrink-0" />
                 <span className="truncate">Audience: {insights.dominantAudience}</span>
               </div>
             </div>
@@ -196,7 +196,7 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({
             >
               <div className="flex items-start gap-2.5 max-w-[85%]">
                 {msg.sender === 'ai' && (
-                  <div className="w-7 h-7 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center flex-shrink-0 mt-0.5 border border-purple-500/30">
+                  <div className="w-7 h-7 rounded-lg bg-brand-600/20 text-palette-amber flex items-center justify-center flex-shrink-0 mt-0.5 border border-brand-500/30">
                     <Bot className="w-4 h-4" />
                   </div>
                 )}
@@ -204,14 +204,14 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({
                 <div
                   className={`p-3.5 rounded-2xl text-xs leading-relaxed ${
                     msg.sender === 'user'
-                      ? 'bg-brand-600 text-white rounded-tr-none shadow-md shadow-brand-600/25'
-                      : 'bg-slate-900 border border-slate-800 text-slate-200 rounded-tl-none shadow-lg'
+                      ? 'bg-brand-600 text-palette-cream rounded-tr-none shadow-md shadow-brand-600/30 font-medium'
+                      : 'bg-espresso-900 border border-espresso-800 text-amber-100/90 rounded-tl-none shadow-lg'
                   }`}
                 >
                   <p className="whitespace-pre-wrap">{msg.text}</p>
                   <div
                     className={`text-[9px] mt-1.5 font-mono ${
-                      msg.sender === 'user' ? 'text-brand-200 text-right' : 'text-slate-500'
+                      msg.sender === 'user' ? 'text-amber-200/70 text-right' : 'text-amber-200/50'
                     }`}
                   >
                     {msg.timestamp}
@@ -219,7 +219,7 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({
                 </div>
 
                 {msg.sender === 'user' && (
-                  <div className="w-7 h-7 rounded-lg bg-brand-500/20 text-brand-300 flex items-center justify-center flex-shrink-0 mt-0.5 border border-brand-500/30">
+                  <div className="w-7 h-7 rounded-lg bg-palette-amber/20 text-palette-amber flex items-center justify-center flex-shrink-0 mt-0.5 border border-palette-amber/30">
                     <UserIcon className="w-4 h-4" />
                   </div>
                 )}
@@ -232,10 +232,10 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({
                     <button
                       key={idx}
                       onClick={() => handleSend(question)}
-                      className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-purple-950/60 text-purple-300 border border-purple-500/30 hover:border-purple-500/50 transition-all flex items-center gap-1"
+                      className="text-[11px] px-2.5 py-1 rounded-lg bg-espresso-900 hover:bg-espresso-850 text-palette-amber border border-brand-500/30 hover:border-brand-500/60 transition-all flex items-center gap-1"
                     >
                       <span>{question}</span>
-                      <ArrowRight className="w-3 h-3 text-purple-400" />
+                      <ArrowRight className="w-3 h-3 text-palette-amber" />
                     </button>
                   ))}
                 </div>
@@ -244,8 +244,8 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({
           ))}
 
           {loading && (
-            <div className="flex items-center gap-2 text-xs text-slate-400 ml-9">
-              <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
+            <div className="flex items-center gap-2 text-xs text-amber-200/60 ml-9">
+              <Loader2 className="w-4 h-4 animate-spin text-palette-amber" />
               <span>Analyzing telemetry with AI...</span>
             </div>
           )}
@@ -254,7 +254,7 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({
         </div>
 
         {/* Input Bar */}
-        <div className="p-4 border-t border-slate-800 bg-slate-900/60">
+        <div className="p-4 border-t border-espresso-800 bg-espresso-900/80">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -267,12 +267,12 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({
               placeholder="Ask Base62 AI (e.g. Why did traffic decrease?)..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              className="flex-1 px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+              className="flex-1 px-4 py-2.5 rounded-xl bg-espresso-950 border border-espresso-750 text-xs text-palette-cream placeholder-amber-200/40 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
             <button
               type="submit"
               disabled={loading || !inputValue.trim()}
-              className="p-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white disabled:opacity-50 transition-all shadow-md shadow-purple-600/30"
+              className="p-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-palette-amber hover:from-brand-500 hover:to-amber-400 text-espresso-950 font-bold disabled:opacity-50 transition-all shadow-md shadow-brand-600/30 border border-brand-400/30"
             >
               <Send className="w-4 h-4" />
             </button>

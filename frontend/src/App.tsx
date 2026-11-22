@@ -132,7 +132,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-brand-500 selection:text-white">
+    <div className="min-h-screen bg-espresso-950 text-palette-cream flex flex-col font-sans selection:bg-brand-600 selection:text-palette-cream">
       {/* Navigation */}
       <Navbar
         user={user}
@@ -190,16 +190,16 @@ export const App: React.FC = () => {
         {/* TAB 3: SWAGGER & SYSTEM ARCHITECTURE DOCS */}
         {activeTab === 'docs' && (
           <div className="space-y-6 animate-in fade-in-50 duration-200">
-            <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl">
+            <div className="p-6 rounded-2xl bg-espresso-900 border border-espresso-800 shadow-xl">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <div>
-                  <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-palette-cream flex items-center gap-2">
                     <span>Engineering Specifications & OpenAPI</span>
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono">
+                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-brand-500/20 text-brand-400 font-mono border border-brand-500/30">
                       Springdoc v2.6.0
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-amber-200/70 mt-1">
                     Explore live interactive Swagger UI endpoints, schemas, and rate-limiting headers.
                   </p>
                 </div>
@@ -207,7 +207,7 @@ export const App: React.FC = () => {
                   href="/swagger-ui/index.html"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow-lg shadow-brand-600/30 transition-all"
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-palette-cream text-xs font-semibold shadow-lg shadow-brand-600/30 transition-all border border-brand-500/40"
                 >
                   <span>Open Swagger UI</span>
                   <ExternalLink className="w-4 h-4" />
@@ -216,32 +216,32 @@ export const App: React.FC = () => {
 
               {/* Architectural Highlights Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
+                <div className="p-4 rounded-xl bg-espresso-950 border border-espresso-800">
                   <div className="flex items-center gap-2 text-brand-400 text-xs font-bold mb-2">
-                    <Database className="w-4 h-4" />
+                    <Database className="w-4 h-4 text-brand-400" />
                     <span>Sub-ms Redis Caching</span>
                   </div>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    Redirects query Redis key <code className="text-brand-300 font-mono text-[11px]">base62:url:&#123;code&#125;</code> for ultra-low latency reads. Database hits occur only on cache misses with automatic cache warming.
+                  <p className="text-xs text-amber-100/70 leading-relaxed">
+                    Redirects query Redis key <code className="text-brand-300 font-mono text-[11px] bg-espresso-900 px-1 py-0.5 rounded">base62:url:&#123;code&#125;</code> for ultra-low latency reads. Database hits occur only on cache misses with automatic cache warming.
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-                  <div className="flex items-center gap-2 text-purple-400 text-xs font-bold mb-2">
-                    <Cpu className="w-4 h-4" />
+                <div className="p-4 rounded-xl bg-espresso-950 border border-espresso-800">
+                  <div className="flex items-center gap-2 text-palette-amber text-xs font-bold mb-2">
+                    <Cpu className="w-4 h-4 text-palette-amber" />
                     <span>Distributed Rate Limiter</span>
                   </div>
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    Sliding window counter enforced in Redis. Responds with <code className="text-purple-300 font-mono text-[11px]">HTTP 429 Too Many Requests</code> and <code className="text-purple-300 font-mono text-[11px]">Retry-After</code> headers when exhausted.
+                  <p className="text-xs text-amber-100/70 leading-relaxed">
+                    Token bucket rate limiting enforced in Redis. Responds with <code className="text-brand-300 font-mono text-[11px] bg-espresso-900 px-1 py-0.5 rounded">HTTP 429 Too Many Requests</code> and <code className="text-brand-300 font-mono text-[11px] bg-espresso-900 px-1 py-0.5 rounded">X-RateLimit-*</code> headers.
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800">
-                  <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold mb-2">
-                    <Globe className="w-4 h-4" />
+                <div className="p-4 rounded-xl bg-espresso-950 border border-espresso-800">
+                  <div className="flex items-center gap-2 text-brand-300 text-xs font-bold mb-2">
+                    <Globe className="w-4 h-4 text-brand-300" />
                     <span>Decoupled Click Pipeline</span>
                   </div>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-amber-100/70 leading-relaxed">
                     Redirect requests fire non-blocking asynchronous events. Telemetry ingestion, UA parsing, and GeoIP enrichment run in parallel worker pools without delaying visitor redirects.
                   </p>
                 </div>
@@ -259,9 +259,9 @@ export const App: React.FC = () => {
             setAiInitialQuestion(undefined);
             setAiDrawerOpen(true);
           }}
-          className="flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 text-white font-semibold text-xs sm:text-sm shadow-2xl shadow-purple-600/40 hover:scale-105 active:scale-95 transition-all border border-white/20 glow-brand"
+          className="flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-brand-600 via-brand-500 to-palette-amber text-palette-cream font-semibold text-xs sm:text-sm shadow-2xl shadow-brand-600/40 hover:scale-105 active:scale-95 transition-all border border-brand-400/40 glow-brand"
         >
-          <Sparkles className="w-4 h-4 text-amber-300 animate-spin" />
+          <Sparkles className="w-4 h-4 text-palette-cream animate-spin" />
           <span>Ask Base62 AI</span>
         </button>
       </aside>
