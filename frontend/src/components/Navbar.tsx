@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Key, LogOut, User as UserIcon, Sun, Moon } from 'lucide-react';
+import { Sparkles, Key, LogOut, User as UserIcon, Sun, Moon, Link2, BarChart3, Code2 } from 'lucide-react';
 import { User } from '../types';
 
 interface NavbarProps {
@@ -24,126 +24,182 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleTheme,
 }) => {
   return (
-    <header className="border-b border-theme-border bg-theme-page/85 backdrop-blur-md sticky top-0 z-40 transition-colors">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        
-        {/* Brand Logo with Image */}
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => setActiveTab('links')}
-            className="flex items-center gap-2.5 group text-left"
-          >
-            <div className="h-9 px-2 py-0.5 rounded-xl bg-palette-cream border border-palette-terracotta/20 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
-              <img
-                src="/logo.png"
-                alt="Base62"
-                className="h-7 w-auto object-contain"
-              />
-            </div>
-            <span className="font-extrabold text-lg tracking-tight text-theme-main">
-              Base62
-            </span>
-          </button>
-        </div>
+    <>
+      {/* Top Header */}
+      <header className="border-b border-theme-border bg-theme-page/85 backdrop-blur-md sticky top-0 z-40 transition-colors">
+        <div className="max-w-6xl mx-auto px-3.5 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+          
+          {/* Brand Logo with Image */}
+          <div className="flex items-center gap-2.5">
+            <button 
+              onClick={() => setActiveTab('links')}
+              className="flex items-center gap-2 group text-left"
+            >
+              <div className="h-8 sm:h-9 px-1.5 sm:px-2 py-0.5 rounded-xl bg-palette-cream border border-palette-terracotta/20 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
+                <img
+                  src="/logo.png"
+                  alt="Base62"
+                  className="h-6 sm:h-7 w-auto object-contain"
+                />
+              </div>
+              <span className="font-extrabold text-base sm:text-lg tracking-tight text-theme-main">
+                Base62
+              </span>
+            </button>
+          </div>
 
-        {/* Quiet Minimalist Navigation */}
-        <nav className="flex items-center gap-1 bg-theme-subtle/60 p-1 rounded-xl border border-theme-border">
+          {/* Desktop Navigation Tabs */}
+          <nav className="hidden md:flex items-center gap-1 bg-theme-subtle/60 p-1 rounded-xl border border-theme-border">
+            <button
+              onClick={() => setActiveTab('links')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'links'
+                  ? 'bg-palette-terracotta text-palette-cream shadow-xs'
+                  : 'text-theme-muted hover:text-theme-main'
+              }`}
+            >
+              Links
+            </button>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'analytics'
+                  ? 'bg-palette-terracotta text-palette-cream shadow-xs'
+                  : 'text-theme-muted hover:text-theme-main'
+              }`}
+            >
+              Analytics
+            </button>
+            <button
+              onClick={() => setActiveTab('ai')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                activeTab === 'ai'
+                  ? 'bg-palette-terracotta text-palette-cream shadow-xs'
+                  : 'text-theme-muted hover:text-palette-terracotta'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>AI</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('docs')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeTab === 'docs'
+                  ? 'bg-palette-terracotta text-palette-cream shadow-xs'
+                  : 'text-theme-muted hover:text-theme-main'
+              }`}
+            >
+              API
+            </button>
+          </nav>
+
+          {/* Right Actions */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
+            {/* Theme Switcher */}
+            <button
+              onClick={onToggleTheme}
+              className="p-1.5 sm:p-2 rounded-xl text-theme-muted hover:text-theme-main hover:bg-theme-subtle border border-theme-border transition-colors"
+              title={isDark ? 'Switch to Warm Cream (Light)' : 'Switch to Espresso Night (Dark)'}
+              aria-label="Toggle theme"
+            >
+              {isDark ? <Sun className="w-4 h-4 text-palette-amber" /> : <Moon className="w-4 h-4" />}
+            </button>
+
+            {user ? (
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <button
+                  onClick={onOpenApiKey}
+                  className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-xl bg-theme-subtle text-xs font-medium text-theme-main border border-theme-border hover:border-theme-border-hover transition-colors"
+                  title="Developer API Key"
+                >
+                  <Key className="w-3.5 h-3.5 text-palette-terracotta" />
+                  <span className="hidden sm:inline">API Key</span>
+                </button>
+
+                <div className="flex items-center gap-1.5 pl-1.5 border-l border-theme-border">
+                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-xl bg-theme-subtle border border-theme-border">
+                    <div className="w-6 h-6 rounded-lg bg-palette-terracotta/20 text-palette-terracotta flex items-center justify-center font-bold text-xs">
+                      {user.fullName ? user.fullName[0].toUpperCase() : 'U'}
+                    </div>
+                    <span className="text-xs font-semibold text-theme-main hidden lg:inline max-w-[100px] truncate">
+                      {user.fullName || user.email.split('@')[0]}
+                    </span>
+                  </div>
+                  <button
+                    onClick={onLogout}
+                    className="p-1.5 rounded-lg text-theme-faint hover:text-rose-500 transition-colors"
+                    title="Logout"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={onOpenAuth}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-palette-terracotta hover:bg-brand-700 text-palette-cream text-xs font-semibold shadow-xs transition-all"
+              >
+                <UserIcon className="w-3.5 h-3.5" />
+                <span>Sign In</span>
+              </button>
+            )}
+
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Bottom Navigation Bar (iOS / Android Native Style) */}
+      <nav aria-label="Mobile Navigation" className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-theme-page/90 backdrop-blur-lg border-t border-theme-border pb-[env(safe-area-inset-bottom)] transition-colors shadow-lg">
+        <div className="grid grid-cols-4 h-14">
           <button
             onClick={() => setActiveTab('links')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex flex-col items-center justify-center gap-1 text-[10px] font-semibold transition-colors ${
               activeTab === 'links'
-                ? 'bg-palette-terracotta text-palette-cream shadow-sm'
+                ? 'text-palette-terracotta'
                 : 'text-theme-muted hover:text-theme-main'
             }`}
           >
-            Links
+            <Link2 className={`w-4 h-4 ${activeTab === 'links' ? 'stroke-[2.5]' : ''}`} />
+            <span>Links</span>
           </button>
+
           <button
             onClick={() => setActiveTab('analytics')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex flex-col items-center justify-center gap-1 text-[10px] font-semibold transition-colors ${
               activeTab === 'analytics'
-                ? 'bg-palette-terracotta text-palette-cream shadow-sm'
+                ? 'text-palette-terracotta'
                 : 'text-theme-muted hover:text-theme-main'
             }`}
           >
-            Analytics
+            <BarChart3 className={`w-4 h-4 ${activeTab === 'analytics' ? 'stroke-[2.5]' : ''}`} />
+            <span>Analytics</span>
           </button>
+
           <button
             onClick={() => setActiveTab('ai')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+            className={`flex flex-col items-center justify-center gap-1 text-[10px] font-semibold transition-colors ${
               activeTab === 'ai'
-                ? 'bg-palette-terracotta text-palette-cream shadow-sm'
-                : 'text-theme-muted hover:text-palette-terracotta'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>AI</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('docs')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-              activeTab === 'docs'
-                ? 'bg-palette-terracotta text-palette-cream shadow-sm'
+                ? 'text-palette-terracotta'
                 : 'text-theme-muted hover:text-theme-main'
             }`}
           >
-            API
+            <Sparkles className={`w-4 h-4 ${activeTab === 'ai' ? 'stroke-[2.5]' : ''}`} />
+            <span>AI</span>
           </button>
-        </nav>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-2.5">
-          {/* Theme Switcher */}
           <button
-            onClick={onToggleTheme}
-            className="p-2 rounded-xl text-theme-muted hover:text-theme-main hover:bg-theme-subtle border border-theme-border transition-colors"
-            title={isDark ? 'Switch to Warm Cream (Light)' : 'Switch to Espresso Night (Dark)'}
-            aria-label="Toggle theme"
+            onClick={() => setActiveTab('docs')}
+            className={`flex flex-col items-center justify-center gap-1 text-[10px] font-semibold transition-colors ${
+              activeTab === 'docs'
+                ? 'text-palette-terracotta'
+                : 'text-theme-muted hover:text-theme-main'
+            }`}
           >
-            {isDark ? <Sun className="w-4 h-4 text-palette-amber" /> : <Moon className="w-4 h-4" />}
+            <Code2 className={`w-4 h-4 ${activeTab === 'docs' ? 'stroke-[2.5]' : ''}`} />
+            <span>API</span>
           </button>
-
-          {user ? (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={onOpenApiKey}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-theme-subtle text-xs font-medium text-theme-main border border-theme-border hover:border-theme-border-hover transition-colors"
-                title="Developer API Key"
-              >
-                <Key className="w-3.5 h-3.5 text-palette-terracotta" />
-                <span>API Key</span>
-              </button>
-
-              <div className="flex items-center gap-2 pl-2 border-l border-theme-border">
-                <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-theme-subtle border border-theme-border">
-                  <div className="w-6 h-6 rounded-lg bg-palette-terracotta/20 text-palette-terracotta flex items-center justify-center font-bold text-xs">
-                    {user.fullName ? user.fullName[0].toUpperCase() : 'U'}
-                  </div>
-                  <span className="text-xs font-semibold text-theme-main hidden sm:inline">
-                    {user.fullName || user.email.split('@')[0]}
-                  </span>
-                </div>
-                <button
-                  onClick={onLogout}
-                  className="p-1.5 rounded-lg text-theme-faint hover:text-rose-500 transition-colors"
-                  title="Logout"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button
-              onClick={onOpenAuth}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-palette-terracotta hover:bg-brand-700 text-palette-cream text-xs font-semibold shadow-sm transition-all"
-            >
-              <UserIcon className="w-3.5 h-3.5" />
-              <span>Sign In</span>
-            </button>
-          )}
-
         </div>
-      </div>
-    </header>
+      </nav>
+    </>
   );
 };

@@ -23,7 +23,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
 }) => {
   if (!analytics) {
     return (
-      <div className="card-aesthetic rounded-2xl p-12 text-center text-theme-muted text-xs">
+      <div className="card-aesthetic rounded-2xl p-8 sm:p-12 text-center text-theme-muted text-xs">
         Loading analytics...
       </div>
     );
@@ -32,31 +32,31 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
   const isGrowthPositive = analytics.weeklyChangePercentage >= 0;
 
   return (
-    <div className="space-y-6 pt-2">
+    <div className="space-y-4 sm:space-y-6 pt-1 sm:pt-2 pb-16 md:pb-0">
       {/* Quiet Header Banner */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-2 border-b border-theme-border">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-theme-border">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-theme-main">
+            <h2 className="text-lg sm:text-xl font-bold text-theme-main truncate max-w-xs sm:max-w-md">
               {selectedUrl ? selectedUrl.title : 'Overview'}
             </h2>
             {selectedUrl && (
               <button
                 onClick={onClearSelectedUrl}
-                className="text-xs text-palette-terracotta hover:underline font-medium"
+                className="text-xs text-palette-terracotta hover:underline font-medium flex-shrink-0"
               >
                 (View All)
               </button>
             )}
           </div>
-          <p className="text-xs text-theme-muted mt-0.5">
+          <p className="text-xs text-theme-muted mt-0.5 truncate max-w-sm sm:max-w-xl">
             {selectedUrl ? selectedUrl.originalUrl : 'Performance across all shortened links.'}
           </p>
         </div>
 
         <button
           onClick={() => onOpenAiChat("Why did my link traffic shift this week?")}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-theme-card hover:bg-theme-subtle border border-theme-border text-xs font-semibold text-palette-terracotta shadow-sm transition-colors"
+          className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-theme-card hover:bg-theme-subtle border border-theme-border text-xs font-semibold text-palette-terracotta shadow-xs transition-colors min-h-[38px]"
         >
           <Sparkles className="w-3.5 h-3.5" />
           <span>Ask AI Analysis</span>
@@ -64,14 +64,14 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {/* Total Clicks */}
-        <div className="card-aesthetic rounded-2xl p-4">
-          <div className="text-xs text-theme-muted font-medium">Total Clicks</div>
-          <div className="text-2xl font-extrabold text-theme-main mt-1 font-mono">
+        <div className="card-aesthetic rounded-2xl p-3.5 sm:p-4">
+          <div className="text-[11px] sm:text-xs text-theme-muted font-medium">Total Clicks</div>
+          <div className="text-xl sm:text-2xl font-extrabold text-theme-main mt-1 font-mono">
             {analytics.totalClicks.toLocaleString()}
           </div>
-          <div className="flex items-center gap-1 mt-1 text-[11px]">
+          <div className="flex items-center gap-1 mt-1 text-[10px] sm:text-[11px]">
             {isGrowthPositive ? (
               <span className="flex items-center text-emerald-600 dark:text-emerald-400 font-semibold">
                 <TrendingUp className="w-3 h-3 mr-0.5" /> +{analytics.weeklyChangePercentage}%
@@ -86,49 +86,49 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </div>
 
         {/* Top Referral */}
-        <div className="card-aesthetic rounded-2xl p-4">
-          <div className="text-xs text-theme-muted font-medium">Top Source</div>
-          <div className="text-lg font-bold text-theme-main mt-1 truncate">
+        <div className="card-aesthetic rounded-2xl p-3.5 sm:p-4">
+          <div className="text-[11px] sm:text-xs text-theme-muted font-medium">Top Source</div>
+          <div className="text-base sm:text-lg font-bold text-theme-main mt-1 truncate">
             {analytics.topReferrers.length > 0 ? analytics.topReferrers[0].name : 'Direct'}
           </div>
-          <div className="text-[11px] text-theme-muted mt-1 truncate">
-            {analytics.topReferrers.length > 0 ? `${analytics.topReferrers[0].percentage}% of traffic` : 'Direct inbound'}
+          <div className="text-[10px] sm:text-[11px] text-theme-muted mt-1 truncate">
+            {analytics.topReferrers.length > 0 ? `${analytics.topReferrers[0].percentage}% share` : 'Direct inbound'}
           </div>
         </div>
 
         {/* Primary Device */}
-        <div className="card-aesthetic rounded-2xl p-4">
-          <div className="text-xs text-theme-muted font-medium">Top Device</div>
-          <div className="text-lg font-bold text-theme-main mt-1">
+        <div className="card-aesthetic rounded-2xl p-3.5 sm:p-4">
+          <div className="text-[11px] sm:text-xs text-theme-muted font-medium">Top Device</div>
+          <div className="text-base sm:text-lg font-bold text-theme-main mt-1">
             {analytics.devices.length > 0 ? analytics.devices[0].name : 'Desktop'}
           </div>
-          <div className="text-[11px] text-theme-muted mt-1">
+          <div className="text-[10px] sm:text-[11px] text-theme-muted mt-1">
             {analytics.devices.length > 0 ? `${analytics.devices[0].percentage}% share` : 'Balanced'}
           </div>
         </div>
 
         {/* Top Location */}
-        <div className="card-aesthetic rounded-2xl p-4">
-          <div className="text-xs text-theme-muted font-medium">Top Country</div>
-          <div className="text-lg font-bold text-theme-main mt-1 truncate">
+        <div className="card-aesthetic rounded-2xl p-3.5 sm:p-4">
+          <div className="text-[11px] sm:text-xs text-theme-muted font-medium">Top Country</div>
+          <div className="text-base sm:text-lg font-bold text-theme-main mt-1 truncate">
             {analytics.topCountries.length > 0 ? analytics.topCountries[0].countryName : 'Global'}
           </div>
-          <div className="text-[11px] text-theme-muted mt-1">
+          <div className="text-[10px] sm:text-[11px] text-theme-muted mt-1">
             {analytics.topCountries.length > 0 ? `${analytics.topCountries[0].percentage}% reach` : 'Global reach'}
           </div>
         </div>
       </div>
 
       {/* Main Chart */}
-      <div className="card-aesthetic rounded-2xl p-5">
-        <div className="flex items-center justify-between mb-4">
+      <div className="card-aesthetic rounded-2xl p-4 sm:p-5">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
           <h3 className="text-xs font-bold text-theme-main uppercase tracking-wider">
             Daily Traffic Velocity
           </h3>
-          <span className="text-[11px] text-theme-muted font-mono">Past 7 days</span>
+          <span className="text-[10px] sm:text-[11px] text-theme-muted font-mono">Past 7 days</span>
         </div>
 
-        <div className="h-60 w-full">
+        <div className="h-48 sm:h-60 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={analytics.timeSeries} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
               <defs>
@@ -157,13 +157,13 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
 
       {/* Grid: Device Breakdown & Referrers */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Device Breakdown */}
-        <div className="card-aesthetic rounded-2xl p-5 flex flex-col justify-between">
+        {/* Device Share */}
+        <div className="card-aesthetic rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
           <h3 className="text-xs font-bold text-theme-main uppercase tracking-wider mb-2">
             Device Share
           </h3>
 
-          <div className="h-44 w-full flex items-center justify-center">
+          <div className="h-40 sm:h-44 w-full flex items-center justify-center">
             {analytics.devices.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -173,8 +173,8 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    innerRadius={45}
-                    outerRadius={68}
+                    innerRadius={40}
+                    outerRadius={62}
                     paddingAngle={3}
                   >
                     {analytics.devices.map((entry, index) => (
@@ -197,10 +197,10 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-4 pt-3 border-t border-theme-border text-center">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 pt-3 border-t border-theme-border text-center">
             {analytics.devices.map((item, idx) => (
               <div key={item.name} className="flex items-center gap-1.5 text-xs">
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: PALETTE_COLORS[idx % PALETTE_COLORS.length] }} />
+                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: PALETTE_COLORS[idx % PALETTE_COLORS.length] }} />
                 <span className="text-theme-muted">{item.name}</span>
                 <span className="font-semibold text-theme-main font-mono">{item.percentage}%</span>
               </div>
@@ -209,12 +209,12 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </div>
 
         {/* Referrers */}
-        <div className="card-aesthetic rounded-2xl p-5 flex flex-col justify-between">
+        <div className="card-aesthetic rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
           <h3 className="text-xs font-bold text-theme-main uppercase tracking-wider mb-2">
-            Referrers
+            Top Referrers
           </h3>
 
-          <div className="space-y-2.5 my-auto">
+          <div className="space-y-2.5 my-auto py-2">
             {analytics.topReferrers.length > 0 ? (
               analytics.topReferrers.map((ref) => (
                 <div key={ref.name} className="space-y-1">
@@ -231,7 +231,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
                 </div>
               ))
             ) : (
-              <div className="text-theme-faint text-xs py-8 text-center">No referrers yet.</div>
+              <div className="text-theme-faint text-xs py-6 text-center">No referrers yet.</div>
             )}
           </div>
 

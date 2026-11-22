@@ -165,7 +165,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-3.5 sm:px-6 py-5 sm:py-8 pb-20 md:pb-8">
         
         {/* TAB 1: LINKS */}
         {activeTab === 'links' && (
@@ -259,7 +259,7 @@ export const App: React.FC = () => {
       </main>
 
       {/* Aesthetic Floating AI Pill */}
-      <aside aria-label="AI Assistant" className="fixed bottom-6 right-6 z-30">
+      <aside aria-label="AI Assistant" className="fixed bottom-16 sm:bottom-6 right-3.5 sm:right-6 z-30">
         <button
           onClick={() => {
             setAiInitialQuestion(undefined);

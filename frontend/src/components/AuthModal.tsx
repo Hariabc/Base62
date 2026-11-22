@@ -118,7 +118,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 placeholder="Alex Rivera"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-theme-page border border-theme-border text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-theme-page border border-theme-border text-base sm:text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
               />
             </div>
           )}
@@ -131,7 +131,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded-xl bg-theme-page border border-theme-border text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-theme-page border border-theme-border text-base sm:text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
             />
           </div>
 
@@ -143,14 +143,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded-xl bg-theme-page border border-theme-border text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-theme-page border border-theme-border text-base sm:text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 rounded-xl bg-palette-terracotta hover:bg-brand-700 text-palette-cream text-xs font-semibold shadow-xs flex items-center justify-center gap-1.5 transition-all mt-3 disabled:opacity-50"
+            className="w-full py-3 rounded-xl bg-palette-terracotta hover:bg-brand-700 text-palette-cream text-xs sm:text-sm font-semibold shadow-xs flex items-center justify-center gap-1.5 transition-all mt-3 disabled:opacity-50 min-h-[44px]"
           >
             {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
             <span>{isRegister ? 'Register' : 'Sign In'}</span>

@@ -42,6 +42,7 @@
     transition: background-color 0.2s ease, color 0.2s ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
   }
   
   code, pre {
@@ -66,6 +67,15 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(212, 98, 26, 0.45);
+}
+
+/* Hide scrollbar for clean horizontal mobile pill rows */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Aesthetic card class ensuring correct background and text color in all modes */

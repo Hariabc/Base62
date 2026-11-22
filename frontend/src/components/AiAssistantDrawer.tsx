@@ -206,7 +206,7 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({
         </div>
 
         {/* Input */}
-        <div className="p-3 border-t border-theme-border bg-theme-card/60">
+        <div className="p-3 border-t border-theme-border bg-theme-card/60 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -219,14 +219,14 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({
               placeholder="Ask a question about your traffic..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              className="flex-1 px-3 py-2 rounded-xl bg-theme-page border border-theme-border text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
+              className="flex-1 px-3 py-2.5 rounded-xl bg-theme-page border border-theme-border text-base sm:text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
             />
             <button
               type="submit"
               disabled={loading || !inputValue.trim()}
-              className="p-2 rounded-xl bg-palette-terracotta hover:bg-brand-700 text-palette-cream disabled:opacity-40 transition-colors shadow-xs"
+              className="p-2.5 rounded-xl bg-palette-terracotta hover:bg-brand-700 text-palette-cream disabled:opacity-40 transition-colors shadow-xs min-h-[42px] min-w-[42px] flex items-center justify-center"
             >
-              <Send className="w-3.5 h-3.5" />
+              <Send className="w-4 h-4" />
             </button>
           </form>
         </div>

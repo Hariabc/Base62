@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ExternalLink, Copy, Check, QrCode, BarChart3, Trash2 } from 'lucide-react';
+import { Search, ExternalLink, Copy, Check, QrCode, BarChart3, Trash2, Calendar, Globe } from 'lucide-react';
 import { UrlItem } from '../types';
 
 interface UrlTableProps {
@@ -37,7 +37,7 @@ export const UrlTable: React.FC<UrlTableProps> = ({
 
   return (
     <div className="card-aesthetic rounded-2xl overflow-hidden mt-6 shadow-md">
-      {/* Header bar */}
+      {/* Header & Search Bar */}
       <div className="p-4 sm:p-5 border-b border-theme-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-theme-card">
         <div>
           <h2 className="text-sm font-bold text-theme-main flex items-center gap-2">
@@ -48,7 +48,7 @@ export const UrlTable: React.FC<UrlTableProps> = ({
           </h2>
         </div>
 
-        {/* Search */}
+        {/* Search Input */}
         <div className="relative w-full sm:w-64">
           <Search className="w-3.5 h-3.5 text-theme-faint absolute inset-y-0 left-3 my-auto pointer-events-none" />
           <input
@@ -56,13 +56,116 @@ export const UrlTable: React.FC<UrlTableProps> = ({
             placeholder="Search links..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-theme-input border border-theme-border text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
+            className="w-full pl-8 pr-3 py-2 sm:py-1.5 rounded-xl bg-theme-input border border-theme-border text-base sm:text-xs text-theme-main placeholder-theme-faint focus:outline-none focus:border-palette-terracotta"
           />
         </div>
       </div>
 
-      {/* Table view */}
-      <div className="overflow-x-auto">
+      {/* ============================================================== */}
+      {/* MOBILE CARDS VIEW (Phone screens < 768px)                      */}
+      {/* ============================================================== */}
+      <div className="block md:hidden divide-y divide-theme-border">
+        {loading ? (
+          <div className="p-8 text-center text-theme-faint text-xs">
+            Loading links...
+          </div>
+        ) : filteredUrls.length === 0 ? (
+          <div className="p-8 text-center text-theme-faint text-xs">
+            {searchTerm ? 'No links found matching your search.' : 'No links yet. Shorten your first link above!'}
+          </div>
+        ) : (
+          filteredUrls.map((url) => (
+            <div key={url.id} className="p-4 space-y-3 hover:bg-theme-subtle/20 transition-colors">
+              {/* Title & Status */}
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="font-bold text-sm text-theme-main flex items-center gap-1.5 truncate">
+                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${url.isActive && !url.isExpired ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                    <span className="truncate">{url.title || 'Untitled Link'}</span>
+                  </div>
+                  <div className="text-[11px] text-theme-muted truncate pl-3.5 mt-0.5">
+                    {url.originalUrl}
+                  </div>
+                </div>
+
+                {/* Click Badge */}
+                <div className="px-2 py-0.5 rounded-md bg-theme-subtle border border-theme-border text-xs font-mono font-bold text-theme-main flex-shrink-0">
+                  ⚡ {url.clickCount.toLocaleString()}
+                </div>
+              </div>
+
+              {/* Short Link Tap-to-Copy Pill */}
+              <div className="flex items-center justify-between p-2 rounded-xl bg-theme-input border border-theme-border">
+                <a
+                  href={url.shortUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono text-xs font-bold text-palette-amber hover:underline truncate"
+                >
+                  {url.customAlias ? `/r/${url.customAlias}` : `/r/${url.shortCode}`}
+                </a>
+                <button
+                  onClick={() => copyShortUrl(url.id, url.shortUrl)}
+                  className="p-1 rounded-lg text-theme-faint hover:text-theme-main transition-colors flex items-center gap-1 text-[11px]"
+                  title="Copy short link"
+                >
+                  {copiedId === url.id ? (
+                    <Check className="w-3.5 h-3.5 text-emerald-500" />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
+                  <span className="text-[10px] text-theme-muted">{copiedId === url.id ? 'Copied' : 'Copy'}</span>
+                </button>
+              </div>
+
+              {/* Bottom Info & Action Buttons */}
+              <div className="flex items-center justify-between pt-1">
+                <span className="text-[10px] text-theme-faint font-mono">
+                  {new Date(url.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => onSelectUrl(url)}
+                    className="p-2 rounded-lg bg-theme-subtle hover:bg-theme-border text-theme-muted hover:text-palette-terracotta transition-colors border border-theme-border"
+                    title="View Analytics"
+                  >
+                    <BarChart3 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => onOpenQr(url)}
+                    className="p-2 rounded-lg bg-theme-subtle hover:bg-theme-border text-theme-muted hover:text-theme-main transition-colors border border-theme-border"
+                    title="QR Code"
+                  >
+                    <QrCode className="w-4 h-4" />
+                  </button>
+                  <a
+                    href={url.shortUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 rounded-lg bg-theme-subtle hover:bg-theme-border text-theme-muted hover:text-theme-main transition-colors border border-theme-border"
+                    title="Open Destination"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                  <button
+                    onClick={() => onDeleteUrl(url.id)}
+                    className="p-2 rounded-lg bg-theme-subtle hover:bg-rose-500/15 text-theme-faint hover:text-rose-500 transition-colors border border-theme-border"
+                    title="Delete"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* ============================================================== */}
+      {/* DESKTOP TABLE VIEW (Tablets & Desktops >= 768px)               */}
+      {/* ============================================================== */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left text-xs">
           <thead className="bg-theme-subtle/50 text-theme-muted font-bold text-[10px] uppercase tracking-wider border-b border-theme-border">
             <tr>
