@@ -60,12 +60,12 @@ export const UrlShortenerCard: React.FC<UrlShortenerCardProps> = ({ onUrlCreated
     <div className="max-w-3xl mx-auto pt-2 pb-2">
       {/* User Brand Logo & Hero Header */}
       <div className="text-center mb-7">
-        <div className="flex justify-center mb-4">
-          <div className="relative group p-1 rounded-2xl bg-gradient-to-b from-theme-subtle/80 to-transparent border border-theme-border/60 shadow-lg">
+        <div className="flex justify-center mb-5">
+          <div className="relative group p-2 rounded-2xl bg-palette-cream border border-palette-terracotta/25 shadow-lg transition-transform duration-300 group-hover:scale-105">
             <img
               src="/logo.png"
               alt="Base62 - Shorten, Share, Track"
-              className="h-20 sm:h-24 w-auto object-contain rounded-xl transition-transform duration-300 group-hover:scale-105"
+              className="h-20 sm:h-24 w-auto object-contain rounded-xl"
             />
           </div>
         </div>

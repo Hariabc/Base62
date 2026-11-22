@@ -33,11 +33,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => setActiveTab('links')}
             className="flex items-center gap-2.5 group text-left"
           >
-            <img
-              src="/logo.png"
-              alt="Base62"
-              className="h-8 w-auto object-contain rounded-lg group-hover:scale-105 transition-transform drop-shadow-sm"
-            />
+            <div className="h-9 px-2 py-0.5 rounded-xl bg-palette-cream border border-palette-terracotta/20 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
+              <img
+                src="/logo.png"
+                alt="Base62"
+                className="h-7 w-auto object-contain"
+              />
+            </div>
             <span className="font-extrabold text-lg tracking-tight text-theme-main">
               Base62
             </span>
